@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // disable the default Next.js server-side rendering for this project
+  devIndicators: false,
+
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/,

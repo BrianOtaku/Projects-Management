@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { EcommerceMetrics } from "@/components/ecommerce/EcommerceMetrics";
 import React from "react";
 import MonthlySalesChart from "@/components/ecommerce/MonthlySalesChart";
-import RecentOrders from "@/components/ecommerce/RecentOrders";
+// import RecentOrders from "@/components/ecommerce/RecentOrders";
+import BasicTableOne from "@/components/tables/BasicTableOne";
 
 export const metadata: Metadata = {
   title:
@@ -18,7 +19,7 @@ export default function Ecommerce() {
 
         <MonthlySalesChart />
 
-        <RecentOrders />
+        <BasicTableOne />
       </div>
     </div>
   );
