@@ -16,3 +16,25 @@
     "password": "staff",
     "role": "STAFF"
   }
+{
+  "title": "New Task",
+  "description": "Do something",
+  "userId": "6",
+  "projectId": "1",
+  "status": "IN_PROGRESS",
+  "startDate": "2025-08-07T00:00:00.000Z",
+  "dueDate": "2025-09-15T00:00:00.000Z"
+}
+{
+    "email": "leader@example.com",
+    "password": "leader"
+}
+{
+  "title": "Dự án quản lý học sinh",
+  "description": "Ứng dụng giúp theo dõi học tập và điểm số",
+  "status": "IN_PROGRESS",
+  "startDate": "2025-08-07T00:00:00.000Z",
+  "dueDate": "2025-09-15T00:00:00.000Z",
+  "progress": 0.0,
+  "fileUrl": "https://example.com/file.pdf"
+}

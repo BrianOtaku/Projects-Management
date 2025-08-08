@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { convertBigIntToString } from '@/lib/utils'
+import { getCurrentUser } from '@/lib/utils'
 
 export async function GET() {
     try {
@@ -17,6 +18,12 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
+    const user = await getCurrentUser();
+
+    if (!user || user.role !== 'MANAGER') {
+        return NextResponse.json({ message: 'Only manager can create project' }, { status: 403 });
+    }
+
     try {
         const body = await req.json()
         const {
@@ -56,6 +63,12 @@ export async function POST(req: Request) {
 }
 
 export async function PUT(req: Request) {
+    const user = await getCurrentUser();
+
+    if (!user || user.role !== 'MANAGER') {
+        return NextResponse.json({ message: 'Only manager can update project' }, { status: 403 });
+    }
+
     try {
         const body = await req.json()
         const {
@@ -94,6 +107,12 @@ export async function PUT(req: Request) {
 }
 
 export async function DELETE(req: NextRequest) {
+    const user = await getCurrentUser();
+
+    if (!user || user.role !== 'MANAGER') {
+        return NextResponse.json({ message: 'Only manager can delete project' }, { status: 403 });
+    }
+
     try {
         const id = req.nextUrl.searchParams.get('id')
         if (!id) {

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { convertBigIntToString } from '@/lib/utils'
+import { getCurrentUser } from '@/lib/utils'
 
 export async function GET() {
     try {
@@ -17,6 +18,12 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+    const user = await getCurrentUser();
+
+    if (!user || user.role !== 'MANAGER') {
+        return NextResponse.json({ message: 'Only manager can create a team' }, { status: 403 });
+    }
+
     try {
         const body = await req.json()
         const { userId, projectId } = body
@@ -64,6 +71,12 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PUT(req: NextRequest) {
+    const user = await getCurrentUser();
+
+    if (!user || user.role !== 'MANAGER') {
+        return NextResponse.json({ message: 'Only manager can update team member' }, { status: 403 });
+    }
+
     try {
         const body = await req.json()
         const { id, userId, projectId } = body
