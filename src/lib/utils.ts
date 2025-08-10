@@ -10,7 +10,7 @@ if (!JWT_SECRET) {
 
 // Ký token
 export function signToken(payload: object) {
-    return jwt.sign(payload, JWT_SECRET, { expiresIn: '7d' });
+    return jwt.sign(payload, JWT_SECRET, { expiresIn: '1d' });
 }
 
 // Xác thực token

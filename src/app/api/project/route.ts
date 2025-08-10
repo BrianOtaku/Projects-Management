@@ -7,7 +7,12 @@ export async function GET() {
     try {
         const projects = await prisma.project.findMany({
             include: {
-                teamMembers: true,
+                team: {
+                    include: {
+                        members: true,
+                    },
+                },
+                tasks: true,
             },
         })
         return NextResponse.json(convertBigIntToString(projects), { status: 200 })
@@ -33,7 +38,6 @@ export async function POST(req: Request) {
             startDate,
             dueDate,
             progress,
-            fileUrl,
         } = body
 
         if (!title || !description || !status || !startDate || !dueDate) {
@@ -51,7 +55,6 @@ export async function POST(req: Request) {
                 startDate: new Date(startDate),
                 dueDate: new Date(dueDate),
                 progress: progress ?? 0.0,
-                fileUrl,
             },
         })
 
@@ -79,7 +82,6 @@ export async function PUT(req: Request) {
             startDate,
             dueDate,
             progress,
-            fileUrl,
         } = body
 
         if (!id) {
@@ -95,7 +97,6 @@ export async function PUT(req: Request) {
                 startDate: startDate ? new Date(startDate) : undefined,
                 dueDate: dueDate ? new Date(dueDate) : undefined,
                 progress,
-                fileUrl,
             },
         })
 

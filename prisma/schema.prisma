@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql" // hoặc "mysql"
+  provider = "postgresql" // Hoặc mysql tùy DB
   url      = env("DATABASE_URL")
 }
 
@@ -17,52 +17,51 @@ enum Status {
   NOT_STARTED
   IN_PROGRESS
   COMPLETED
+  CANCELED
 }
 
 model User {
-  id         BigInt       @id @default(autoincrement())
-  name       String
-  email      String       @unique
-  password   String 
-  role       Role
-  tasks      Task[]
-  teamMember TeamMember[]
+  id       BigInt  @id @default(autoincrement())
+  name     String
+  email    String  @unique
+  password String
+  role     Role
+  teamId   BigInt?
+  team     Team?   @relation(fields: [teamId], references: [id])
+  tasks    Task[]
 }
 
-model TeamMember {
+model Team {
   id        BigInt  @id @default(autoincrement())
-  user      User    @relation(fields: [userId], references: [id])
-  userId    BigInt
-  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  projectId BigInt
-
-  @@unique([userId])
+  projectId BigInt  @unique
+  teamName  String
+  project   Project @relation(fields: [projectId], references: [id])
+  members   User[]
 }
 
 model Project {
-  id           BigInt       @id @default(autoincrement())
-  title        String
-  description  String
-  status       Status
-  startDate    DateTime
-  dueDate      DateTime
-  progress     Float        @default(0.0)
-  teamMembers  TeamMember[]
-  tasks        Task[]
-  fileUrl      String?
+  id          BigInt   @id @default(autoincrement())
+  title       String
+  description String
+  status      Status
+  startDate   DateTime
+  dueDate     DateTime
+  progress    Float
+  team        Team?
+  tasks       Task[]
 }
 
 model Task {
-  id                BigInt   @id @default(autoincrement())
-  title             String
-  description       String
-  status            Status
-  project           Project  @relation(fields: [projectId], references: [id])
-  projectId         BigInt
-  user              User     @relation(fields: [userId], references: [id])
-  userId            BigInt
-  startDate         DateTime
-  dueDate           DateTime
-  reviewedByLeader  Boolean  @default(false)
-  completeAt        DateTime?
+  id               BigInt    @id @default(autoincrement())
+  userId           BigInt
+  projectId        BigInt
+  title            String
+  description      String
+  status           Status
+  startDate        DateTime
+  dueDate          DateTime
+  reviewedByLeader Boolean   @default(false)
+  completeAt       DateTime?
+  user             User      @relation(fields: [userId], references: [id])
+  project          Project   @relation(fields: [projectId], references: [id])
 }

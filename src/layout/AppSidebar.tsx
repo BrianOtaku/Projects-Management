@@ -34,6 +34,11 @@ const navItems: NavItem[] = [
     path: "/basic-tables",
   },
   {
+    name: "Teams Management",
+    icon: <TableIcon />,
+    path: "/basic-tables-2",
+  },
+  {
     icon: <CalenderIcon />,
     name: "Calendar",
     path: "/calendar",

@@ -1,0 +1,58 @@
+export enum Role {
+    MANAGER = "MANAGER",
+    LEADER = "LEADER",
+    STAFF = "STAFF",
+}
+
+export enum Status {
+    NOT_STARTED = "NOT_STARTED",
+    IN_PROGRESS = "IN_PROGRESS",
+    COMPLETED = "COMPLETED",
+    CANCELED = "CANCELED",
+}
+
+export interface User {
+    id: number;
+    name: string;
+    email: string;
+    password: string;
+    role: Role;
+    tasks?: Task;
+    Teams?: Team;
+}
+
+export interface Project {
+    id: number;
+    title: string;
+    description: string;
+    status: Status;
+    startDate: Date;
+    dueDate: Date;
+    progress: number;
+    team?: Team;
+    tasks?: Task[];
+}
+
+export interface Task {
+    id: number;
+    title: string;
+    description: string;
+    status: Status;
+    projectId: number;
+    project?: Project;
+    userId: number;
+    user?: User;
+    startDate: Date;
+    dueDate: Date;
+    reviewedByLeader: boolean;
+    completeAt?: Date;
+}
+
+export interface Team {
+    id: number;
+    teamName: string;
+    userId: number;
+    members?: User[];
+    projectId: number;
+    project?: Project;
+}

@@ -8,7 +8,7 @@ export async function GET() {
         const users = await prisma.user.findMany({
             include: {
                 tasks: true,
-                teamMember: true,
+                team: true,
             },
         })
         return NextResponse.json(convertBigIntToString(users), { status: 200 })
@@ -22,7 +22,6 @@ export async function POST(req: Request) {
         const body = await req.json()
         const { name, email, password, role } = body
 
-        // Hash password
         const hashedPassword = await bcrypt.hash(password, 10)
 
         const newUser = await prisma.user.create({
