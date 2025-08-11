@@ -1,6 +1,6 @@
 "use client";
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
-import BasicTableOne from "@/components/tables/BasicTableOne";
+import ProjectManagement from "@/components/tables/projectManagement";
 import { PaperPlaneIcon } from "@/icons";
 import React, { useEffect, useRef } from "react";
 
@@ -61,7 +61,7 @@ export const ProjectsDetail: React.FC = () => {
         </form>
       </div>
       <div className="space-y-6">
-        <BasicTableOne />
+        <ProjectManagement />
       </div>
     </div>
   );

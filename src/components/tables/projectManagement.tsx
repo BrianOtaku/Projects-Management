@@ -8,18 +8,19 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
-import { getTeams } from "@/services/teams";
-import { Team } from "@/constants/interfaces";
-
-export default function BasicTableTwo() {
-  const [teams, setTeams] = useState<Team[]>([]);
+import Badge from "../ui/badge/Badge";
+import Link from "next/link";
+import { getProjects } from "@/services/projects";
+import { Project } from "@/constants/interfaces";
+export default function ProjectManagement() {
+  const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const data = await getTeams();
-        setTeams(data);
+        const data = await getProjects();
+        setProjects(data);
       } catch (err) {
         console.error("Lỗi khi load projects:", err);
       } finally {
@@ -36,7 +37,11 @@ export default function BasicTableTwo() {
   return (
     <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white px-4 pb-3 pt-4 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6">
       <div className="flex flex-col gap-2 mb-4 sm:flex-row sm:items-center sm:justify-between">
-        <div></div>
+        <Link
+          href="/new-project"
+          className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200">
+          New project
+        </Link>
         <div className="flex items-center gap-3">
           <button className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200">
             Filter
@@ -56,23 +61,26 @@ export default function BasicTableTwo() {
                   Leader
                 </TableCell>
                 <TableCell isHeader className="px-4 py-3 font-medium text-gray-500 text-start text-base dark:text-gray-400">
+                  Project Name
+                </TableCell>
+                <TableCell isHeader className="px-4 py-3 font-medium text-gray-500 text-start text-base dark:text-gray-400">
                   Team Name
                 </TableCell>
                 <TableCell isHeader className="px-4 py-3 font-medium text-gray-500 text-start text-base dark:text-gray-400">
-                  Team
+                  Status
                 </TableCell>
                 <TableCell isHeader className="px-4 py-3 font-medium text-gray-500 text-start text-base dark:text-gray-400">
-                  Project Name
+                  Progress
                 </TableCell>
               </TableRow>
             </TableHeader>
 
             <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-              {teams.map((teams) => {
-                const leader = teams.members?.find((user) => user.role === "LEADER") || null;
+              {projects.map((project) => {
+                const leader = project.team?.members?.find((user) => user.role === "LEADER") || null;
 
                 return (
-                  <TableRow key={teams.id.toString()}>
+                  <TableRow key={project.id.toString()}>
                     <TableCell className="px-5 py-4 sm:px-6 text-start">
                       <div className="flex items-center gap-3">
                         <div>
@@ -86,15 +94,29 @@ export default function BasicTableTwo() {
                       </div>
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                      {teams.teamName}
+                      {project.title}
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                      {project.team?.teamName || "N/A"}
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                      <Badge
+                        size="sm"
+                        color={
+                          project.status === "IN_PROGRESS"
+                            ? "warning"
+                            : project.status === "COMPLETED"
+                              ? "success"
+                              : project.status === "NOT_STARTED"
+                                ? "info"
+                                : "error"
+                        }
+                      >
+                        {project.status}
+                      </Badge>
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                      {teams.members && teams.members.length > 0
-                        ? teams.members.map((member) => member.name).join(", ")
-                        : "No User Assigned"}
-                    </TableCell>
-                    <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                      {teams.project?.title || "No Project Assigned"}
+                      {project.progress}%
                     </TableCell>
                   </TableRow>
                 );

@@ -1,5 +1,5 @@
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
-import DefaultInputs from "@/components/form/form-elements/DefaultInputs";
+import NewProject from "@/components/form/form-elements/newProject";
 import { Metadata } from "next";
 import React from "react";
 
@@ -13,7 +13,7 @@ export default function FormElements() {
   return (
     <div>
       <PageBreadcrumb pageTitle="New Project" />
-      <DefaultInputs />
+      <NewProject />
     </div>
   );
 }

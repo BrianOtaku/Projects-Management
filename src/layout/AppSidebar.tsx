@@ -10,7 +10,6 @@ import {
   GridIcon,
   GroupIcon,
   HorizontaLDots,
-  ListIcon,
   PlugInIcon,
   TableIcon,
 } from "../icons/index";
@@ -31,12 +30,12 @@ const navItems: NavItem[] = [
   {
     name: "Projects Management",
     icon: <TableIcon />,
-    path: "/basic-tables",
+    path: "/projects-management",
   },
   {
     name: "Teams Management",
     icon: <TableIcon />,
-    path: "/basic-tables-2",
+    path: "/teams-management",
   },
   {
     icon: <CalenderIcon />,
@@ -46,12 +45,7 @@ const navItems: NavItem[] = [
   {
     icon: <GroupIcon />,
     name: "Staffs",
-    path: "/profile",
-  },
-  {
-    name: "New Project",
-    path: "/form-elements",
-    icon: <ListIcon />,
+    path: "/staffs",
   },
 ];
 

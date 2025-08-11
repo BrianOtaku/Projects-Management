@@ -23,11 +23,11 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-    const user = await getCurrentUser();
+    // const user = await getCurrentUser();
 
-    if (!user || user.role !== 'MANAGER') {
-        return NextResponse.json({ message: 'Only manager can create project' }, { status: 403 });
-    }
+    // if (!user || user.role !== 'MANAGER') {
+    //     return NextResponse.json({ message: 'Only manager can create project' }, { status: 403 });
+    // }
 
     try {
         const body = await req.json()
