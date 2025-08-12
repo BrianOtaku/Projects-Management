@@ -19,6 +19,16 @@ export interface User {
     role: Role;
     tasks?: Task;
     Teams?: Team;
+    leader?: Team[];
+}
+
+export interface Team {
+    id: number;
+    teamName: string;
+    members?: User[];
+    project?: Project;
+    leaderId: number;
+    leader?: User;
 }
 
 export interface Project {
@@ -29,7 +39,8 @@ export interface Project {
     startDate: Date;
     dueDate: Date;
     progress: number;
-    team?: Team;
+    teamId: number;
+    team: Team;
     tasks?: Task[];
 }
 
@@ -48,11 +59,3 @@ export interface Task {
     completeAt?: Date;
 }
 
-export interface Team {
-    id: number;
-    teamName: string;
-    userId: number;
-    members?: User[];
-    projectId: number;
-    project?: Project;
-}

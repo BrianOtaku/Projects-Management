@@ -10,6 +10,7 @@ export async function GET() {
                 team: {
                     include: {
                         members: true,
+                        leader: true,
                     },
                 },
                 tasks: true,
@@ -30,7 +31,7 @@ export async function POST(req: Request) {
     // }
 
     try {
-        const body = await req.json()
+        const body = await req.json();
         const {
             title,
             description,
@@ -38,13 +39,24 @@ export async function POST(req: Request) {
             startDate,
             dueDate,
             progress,
-        } = body
+            teamId,
+        } = body;
 
         if (!title || !description || !status || !startDate || !dueDate) {
             return NextResponse.json(
                 { error: 'Thiếu thông tin bắt buộc' },
                 { status: 400 }
-            )
+            );
+        }
+
+        const existingProject = await prisma.project.findFirst({
+            where: { teamId: BigInt(teamId) }
+        });
+        if (existingProject) {
+            return NextResponse.json(
+                { error: 'Team này đã có project rồi' },
+                { status: 409 }
+            );
         }
 
         const newProject = await prisma.project.create({
@@ -82,6 +94,7 @@ export async function PUT(req: Request) {
             startDate,
             dueDate,
             progress,
+            teamId,
         } = body
 
         if (!id) {
@@ -97,6 +110,7 @@ export async function PUT(req: Request) {
                 startDate: startDate ? new Date(startDate) : undefined,
                 dueDate: dueDate ? new Date(dueDate) : undefined,
                 progress,
+                teamId: teamId ? BigInt(teamId) : undefined,
             },
         })
 

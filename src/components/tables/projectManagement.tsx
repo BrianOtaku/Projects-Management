@@ -39,7 +39,8 @@ export default function ProjectManagement() {
       <div className="flex flex-col gap-2 mb-4 sm:flex-row sm:items-center sm:justify-between">
         <Link
           href="/new-project"
-          className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200">
+          className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200"
+        >
           New project
         </Link>
         <div className="flex items-center gap-3">
@@ -77,7 +78,6 @@ export default function ProjectManagement() {
 
             <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
               {projects.map((project) => {
-                const leader = project.team?.members?.find((user) => user.role === "LEADER") || null;
 
                 return (
                   <TableRow key={project.id.toString()}>
@@ -85,10 +85,10 @@ export default function ProjectManagement() {
                       <div className="flex items-center gap-3">
                         <div>
                           <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
-                            {leader?.name || "N/A"}
+                            {project.team?.leader?.name || "N/A"}
                           </span>
                           <span className="block text-gray-500 text-theme-xs dark:text-gray-400">
-                            {leader?.email || "N/A"}
+                            {project.team?.leader?.email || "N/A"}
                           </span>
                         </div>
                       </div>

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React, { ReactNode } from "react";
 
 interface ButtonProps {
@@ -9,6 +10,8 @@ interface ButtonProps {
   onClick?: () => void; // Click handler
   disabled?: boolean; // Disabled state
   className?: string; // Disabled state
+  type?: "button" | "submit" | "reset"; // Button type
+  path?: string; // Optional link for navigation
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -20,6 +23,8 @@ const Button: React.FC<ButtonProps> = ({
   onClick,
   className = "",
   disabled = false,
+  type = "button",
+  path,
 }) => {
   // Size Classes
   const sizeClasses = {
@@ -35,13 +40,28 @@ const Button: React.FC<ButtonProps> = ({
       "bg-white text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-400 dark:ring-gray-700 dark:hover:bg-white/[0.03] dark:hover:text-gray-300",
   };
 
+  if (path) {
+    return (
+      <button
+        className={`inline-flex items-center justify-center font-medium gap-2 rounded-lg transition ${className} ${sizeClasses[size]
+          } ${variantClasses[variant]} ${disabled ? "cursor-not-allowed opacity-50" : ""
+          }`}
+      >
+        <Link href={path}>
+          {startIcon && <span className="flex items-center">{startIcon}</span>}
+          {children}
+          {endIcon && <span className="flex items-center">{endIcon}</span>}
+        </Link>
+      </button>
+    );
+  }
+
   return (
     <button
-      className={`inline-flex items-center justify-center font-medium gap-2 rounded-lg transition ${className} ${
-        sizeClasses[size]
-      } ${variantClasses[variant]} ${
-        disabled ? "cursor-not-allowed opacity-50" : ""
-      }`}
+      type={type}
+      className={`inline-flex items-center justify-center font-medium gap-2 rounded-lg transition ${className} ${sizeClasses[size]
+        } ${variantClasses[variant]} ${disabled ? "cursor-not-allowed opacity-50" : ""
+        }`}
       onClick={onClick}
       disabled={disabled}
     >

@@ -69,7 +69,7 @@ export default function TeamManagement() {
 
             <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
               {teams.map((teams) => {
-                const leader = teams.members?.find((user) => user.role === "LEADER") || null;
+                // const leader = teams.leader?.find((user) => user.role === "LEADER") || null;
 
                 return (
                   <TableRow key={teams.id.toString()}>
@@ -77,10 +77,10 @@ export default function TeamManagement() {
                       <div className="flex items-center gap-3">
                         <div>
                           <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
-                            {leader?.name || "N/A"}
+                            {teams.leader?.name || "N/A"}
                           </span>
                           <span className="block text-gray-500 text-theme-xs dark:text-gray-400">
-                            {leader?.email || "N/A"}
+                            {teams.leader?.email || "N/A"}
                           </span>
                         </div>
                       </div>

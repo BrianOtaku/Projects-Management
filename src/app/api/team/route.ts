@@ -7,8 +7,8 @@ export async function GET() {
     try {
         const team = await prisma.team.findMany({
             include: {
-                project: true,
                 members: true,
+                leader: true,
             },
         })
         return NextResponse.json(convertBigIntToString(team), { status: 200 })
@@ -26,25 +26,31 @@ export async function POST(req: NextRequest) {
 
     try {
         const body = await req.json()
-        const { teamName, projectId } = body
+        const { teamName, leaderId } = body
 
-        if (!teamName || !projectId) {
-            return NextResponse.json({ message: 'Missing teamName or projectId' }, { status: 400 })
+        const leader = await prisma.user.findUnique({
+            where: { id: BigInt(leaderId) },
+            select: { role: true }
+        });
+
+        if (!leader) {
+            return NextResponse.json({ message: 'Leader not found' }, { status: 404 });
         }
 
-        const project = await prisma.project.findUnique({
-            where: { id: BigInt(projectId) },
-        })
-        if (!project) {
-            return NextResponse.json({ message: 'Project does not exist' }, { status: 404 })
+        if (leader.role !== 'LEADER') {
+            return NextResponse.json({ message: 'Provided user is not a leader' }, { status: 400 });
+        }
+
+        if (!teamName || !leaderId) {
+            return NextResponse.json({ message: 'Missing teamName or leaderId' }, { status: 400 })
         }
 
         const newTeam = await prisma.team.create({
             data: {
                 teamName,
-                projectId: BigInt(projectId),
+                leaderId: BigInt(leaderId),
             },
-            include: { members: true, project: true },
+            include: { members: true },
         })
 
         return NextResponse.json(convertBigIntToString(newTeam), { status: 201 })
@@ -62,10 +68,23 @@ export async function PUT(req: NextRequest) {
 
     try {
         const body = await req.json();
-        const { teamId, teamName, projectId } = body;
+        const { teamId, teamName, leaderId } = body;
 
-        if (!teamId) {
-            return NextResponse.json({ message: 'Missing teamId' }, { status: 400 });
+        const leader = await prisma.user.findUnique({
+            where: { id: BigInt(leaderId) },
+            select: { role: true }
+        });
+
+        if (!leader) {
+            return NextResponse.json({ message: 'Leader not found' }, { status: 404 });
+        }
+
+        if (leader.role !== 'LEADER') {
+            return NextResponse.json({ message: 'Provided user is not a leader' }, { status: 400 });
+        }
+
+        if (!teamName || !leaderId) {
+            return NextResponse.json({ message: 'Missing teamName or leaderId' }, { status: 400 })
         }
 
         const existingTeam = await prisma.team.findUnique({
@@ -75,20 +94,11 @@ export async function PUT(req: NextRequest) {
             return NextResponse.json({ message: 'Team not found' }, { status: 404 });
         }
 
-        if (projectId) {
-            const projectExists = await prisma.project.findUnique({
-                where: { id: BigInt(projectId) }
-            });
-            if (!projectExists) {
-                return NextResponse.json({ message: 'Project not found' }, { status: 404 });
-            }
-        }
-
         const updatedTeam = await prisma.team.update({
             where: { id: BigInt(teamId) },
             data: {
                 teamName: teamName ?? existingTeam.teamName,
-                projectId: projectId ? BigInt(projectId) : existingTeam.projectId
+                leaderId: BigInt(leaderId) ?? existingTeam.leaderId,
             }
         });
 

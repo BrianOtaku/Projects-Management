@@ -1,29 +1,31 @@
 "use client";
+
 import React, { useState, useEffect } from 'react';
 import ComponentCard from '../../common/ComponentCard';
 import Label from '../Label';
 import Input from '../input/InputField';
 import Select from '../Select';
+import Button from '@/components/ui/button/Button';
 import { ChevronDownIcon } from '../../../icons';
 import DatePicker from '@/components/form/date-picker';
 import TextArea from '../input/TextArea';
 import { createProject } from '@/services/projects';
 import { getTeams } from '@/services/teams';
 import Checkbox from '../input/Checkbox';
+import { Status } from '@/constants/interfaces';
+import { useRouter } from 'next/navigation';
 
 export default function NewProject() {
   const [title, setTitle] = useState("");
-  const [team, setTeam] = useState("");
+  const [teamId, setTeamId] = useState("");
   const [startDate, setStartDate] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [description, setDescription] = useState("");
 
-  const [isNotStarted, setNotStarted] = useState(false);
-  const [isInProgress, setInProgress] = useState(false);
-  const [isCompleted, setCompleted] = useState(false);
-  const [isCanceled, setCanceled] = useState(false);
-
+  const [status, setSelectedStatus] = useState<Status | null>(null);
   const [options, setOptions] = useState<{ value: string; label: string }[]>([]);
+
+  const router = useRouter();
 
   useEffect(() => {
     const fetchTeams = async () => {
@@ -34,7 +36,6 @@ export default function NewProject() {
           label: team.teamName,
         }));
         setOptions(teamOptions);
-        console.log("Fetched teams:", teamOptions);
       } catch (error) {
         console.error('Error fetching teams:', error);
       }
@@ -48,25 +49,28 @@ export default function NewProject() {
     try {
       await createProject({
         title,
-        team,
-        status: "NOT_STARTED", // Assuming a default status
+        teamId,
+        status,
         startDate,
         dueDate,
         description,
       });
       // Reset form after successful submission
       setTitle("");
-      setTeam("");
+      setTeamId("");
+      setSelectedStatus(null);
       setStartDate("");
       setDueDate("");
       setDescription("");
+
+      router.push("/projects-management");
     } catch (error) {
       console.error("Error creating project:", error);
     }
   };
 
   return (
-    <div onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6">
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
         <ComponentCard title="Project">
           <Label>Title</Label>
@@ -81,7 +85,7 @@ export default function NewProject() {
             <Select
               options={options}
               placeholder="Select a team"
-              onChange={(value) => setTeam(value)}
+              onChange={(value) => setTeamId(value)}
               className="dark:bg-dark-900"
             />
             <span className="absolute text-gray-500 -translate-y-1/2 pointer-events-none right-3 top-1/2 dark:text-gray-400">
@@ -117,19 +121,37 @@ export default function NewProject() {
 
       <ComponentCard title="Options">
         <div className="flex items-center gap-4 flex-col items-start md:flex-row">
-          <Checkbox checked={isNotStarted} onChange={setNotStarted} label="Not started" />
-          <Checkbox checked={isInProgress} onChange={setInProgress} label="In progress" />
-          <Checkbox checked={isCompleted} onChange={setCompleted} label="Completed" />
-          <Checkbox checked={isCanceled} onChange={setCanceled} label="Canceled" />
+          <Checkbox
+            checked={status === Status.NOT_STARTED}
+            onChange={() => setSelectedStatus(Status.NOT_STARTED)}
+            label="Not started"
+          />
+          <Checkbox
+            checked={status === Status.IN_PROGRESS}
+            onChange={() => setSelectedStatus(Status.IN_PROGRESS)}
+            label="In progress"
+          />
+          <Checkbox
+            checked={status === Status.COMPLETED}
+            onChange={() => setSelectedStatus(Status.COMPLETED)}
+            label="Completed"
+          />
+          <Checkbox
+            checked={status === Status.CANCELED}
+            onChange={() => setSelectedStatus(Status.CANCELED)}
+            label="Canceled"
+          />
         </div>
       </ComponentCard>
 
-      <button
+      <Button
         type="submit"
-        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        size="sm"
+        variant="outline"
       >
         Create Project
-      </button>
-    </div>
+      </Button>
+
+    </form>
   );
 }
