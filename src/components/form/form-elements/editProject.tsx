@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'next/navigation';
 import ComponentCard from '../../common/ComponentCard';
 import Label from '../Label';
 import Input from '../input/InputField';
@@ -9,13 +10,13 @@ import Button from '@/components/ui/button/Button';
 import { ChevronDownIcon } from '../../../icons';
 import DatePicker from '@/components/form/date-picker';
 import TextArea from '../input/TextArea';
-import { createProject } from '@/services/projects';
+import { deleteProject, getProject, updateProject } from '@/services/projects';
 import { getTeams } from '@/services/teams';
 import Checkbox from '../input/Checkbox';
 import { Status } from '@/constants/interfaces';
 import { useRouter } from 'next/navigation';
 
-export default function NewProject() {
+export default function EditProject() {
   const [title, setTitle] = useState("");
   const [teamId, setTeamId] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -24,6 +25,8 @@ export default function NewProject() {
 
   const [status, setSelectedStatus] = useState<Status | null>(null);
   const [options, setOptions] = useState<{ value: string; label: string }[]>([]);
+
+  const { id } = useParams<{ id: string }>();
 
   const router = useRouter();
 
@@ -44,10 +47,29 @@ export default function NewProject() {
     fetchTeams();
   }, []);
 
+  useEffect(() => {
+    const fetchProjectDetails = async () => {
+      try {
+        const response = await getProject(id);
+        if (response) {
+          setTitle(response.title);
+          setTeamId(response.teamId);
+          setStartDate(response.startDate);
+          setDueDate(response.dueDate);
+          setDescription(response.description);
+          setSelectedStatus(response.status);
+        }
+      } catch (error) {
+        console.error('Error fetching project details:', error);
+      }
+    };
+    fetchProjectDetails();
+  }, [id]);
+
   const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     try {
-      await createProject({
+      await updateProject(id, {
         title,
         teamId,
         status,
@@ -61,9 +83,19 @@ export default function NewProject() {
     }
   };
 
+  const handleDelete = async (e: { preventDefault: () => void; }) => {
+    e.preventDefault();
+    try {
+      await deleteProject(id)
+      router.push("/projects-management");
+    } catch (error) {
+      console.error("Error creating project:", error);
+    }
+  };
+
   const handleCancel = () => {
     router.push("/projects-management");
-  }
+  };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -72,7 +104,7 @@ export default function NewProject() {
           <Label>Title</Label>
           <Input
             type="text"
-            value={title}
+            defaultValue={title}
             onChange={(e) => setTitle(e.target.value)}
           />
 
@@ -81,6 +113,7 @@ export default function NewProject() {
             <Select
               options={options}
               placeholder="Select a team"
+              value={teamId}
               onChange={(value) => setTeamId(value)}
               className="dark:bg-dark-900"
             />
@@ -95,6 +128,7 @@ export default function NewProject() {
             id="start-date"
             label="Start Date"
             placeholder="Select a date"
+            defaultDate={startDate}
             onChange={(dates, currentDateString) => setStartDate(currentDateString)}
           />
 
@@ -102,6 +136,7 @@ export default function NewProject() {
             id="due-date"
             label="Due Date"
             placeholder="Select a date"
+            defaultDate={dueDate}
             onChange={(dates, currentDateString) => setDueDate(currentDateString)}
           />
         </ComponentCard>
@@ -139,14 +174,21 @@ export default function NewProject() {
           />
         </div>
       </ComponentCard>
-
       <div className="flex gap-6 justify-center sm:justify-start">
         <Button
           type="submit"
           size="sm"
-          variant="success"
+          variant="primary"
         >
-          Create Project
+          Update
+        </Button>
+
+        <Button
+          onClick={handleDelete}
+          size="sm"
+          variant="error"
+        >
+          Delete
         </Button>
 
         <Button

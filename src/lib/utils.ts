@@ -49,22 +49,40 @@ export function setAuthCookie(res: NextResponse, token: string) {
         httpOnly: true, // Không cho JS đọc
         secure: process.env.NODE_ENV === 'production', // Chỉ bật secure trên production
         sameSite: 'strict', // Ngăn CSRF
-        maxAge: 7 * 24 * 60 * 60, // 7 ngày
+        maxAge: 24 * 60 * 60, // 1 ngày
         path: '/',
     });
 }
 
-// Chuyển BigInt thành string
-export function convertBigIntToString(obj: unknown): unknown {
+// Xử dữ liệu của đối tượng
+export function normalizeData(obj: unknown): unknown {
+    // Xử lý null hoặc undefined
+    if (obj == null) {
+        return obj;
+    }
+
+    // Xử lý mảng
     if (Array.isArray(obj)) {
-        return obj.map(convertBigIntToString);
-    } else if (typeof obj === 'object' && obj !== null) {
+        return obj.map(normalizeData);
+    }
+
+    // Xử lý Date
+    if (obj instanceof Date) {
+        return obj.toISOString().split("T")[0];
+        // Trả về chuỗi ISO: "2025-08-14T00:00:00.000Z"
+        // Hoặc dùng obj.toISOString().split("T")[0] nếu chỉ muốn "2025-08-14"
+    }
+
+    // Xử lý đối tượng
+    if (typeof obj === "object") {
         return Object.fromEntries(
             Object.entries(obj).map(([key, value]) => [
                 key,
-                typeof value === 'bigint' ? value.toString() : convertBigIntToString(value),
+                typeof value === "bigint" ? value.toString() : normalizeData(value),
             ])
         );
     }
+
+    // Trả về giá trị nguyên bản cho các kiểu khác (string, number, boolean, v.v.)
     return obj;
 }

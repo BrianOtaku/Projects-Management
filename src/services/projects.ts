@@ -6,6 +6,11 @@ export async function getProjects() {
     return res.data;
 }
 
+export async function getProject(id: string | number) {
+    const res = await api.get(`${API_ENDPOINTS.PROJECT_ID}?id=${id}`);
+    return res.data;
+}
+
 export async function createProject(data: unknown) {
     const res = await api.post(API_ENDPOINTS.PROJECT, data);
     return res.data;

@@ -6,6 +6,11 @@ export async function getUsers() {
     return res.data;
 }
 
+export async function getUser(id: string | number) {
+    const res = await api.get(`${API_ENDPOINTS.USER_ID}?id=${id}`);
+    return res.data;
+}
+
 export async function createUser(data: unknown) {
     const res = await api.post(API_ENDPOINTS.USER, data);
     return res.data;

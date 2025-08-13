@@ -1,13 +1,13 @@
 import Link from "next/link";
-import React, { ReactNode } from "react";
+import React, { ReactNode, MouseEvent } from "react";
 
 interface ButtonProps {
   children: ReactNode; // Button text or content
   size?: "sm" | "md"; // Button size
-  variant?: "primary" | "outline"; // Button variant
+  variant?: "primary" | "outline" | "success" | "error" | "warning"; // Button variant
   startIcon?: ReactNode; // Icon before the text
   endIcon?: ReactNode; // Icon after the text
-  onClick?: () => void; // Click handler
+  onClick?: (event: MouseEvent<HTMLButtonElement>) => void; // Click handler
   disabled?: boolean; // Disabled state
   className?: string; // Disabled state
   type?: "button" | "submit" | "reset"; // Button type
@@ -35,9 +35,15 @@ const Button: React.FC<ButtonProps> = ({
   // Variant Classes
   const variantClasses = {
     primary:
-      "bg-brand-500 text-white shadow-theme-xs hover:bg-brand-600 disabled:bg-brand-300",
+      "ring-1 ring-inset bg-brand-50 text-brand-600 hover:bg-brand-200 dark:bg-brand-500/15 dark:text-brand-500 dark:hover:bg-brand-600 dark:hover:text-white disabled:bg-brand-300",
+    success:
+      "ring-1 ring-inset bg-success-50 text-success-600 hover:bg-success-200 dark:bg-success-500/15 dark:text-success-500 dark:hover:bg-success-600 dark:hover:text-white disabled:bg-success-300",
+    error:
+      "ring-1 ring-inset bg-error-50 text-error-600 hover:bg-error-200 dark:bg-error-500/15 dark:text-error-500 dark:hover:bg-error-600 dark:hover:text-white disabled:bg-error-300",
+    warning:
+      "ring-1 ring-inset bg-warning-50 text-warning-600 hover:bg-warning-200 dark:bg-warning-500/15 dark:text-orange-400 dark:hover:bg-warning-600 dark:hover:text-white disabled:bg-warning-300",
     outline:
-      "bg-white text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-400 dark:ring-gray-700 dark:hover:bg-white/[0.03] dark:hover:text-gray-300",
+      "bg-white text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:ring-gray-700 dark:hover:bg-white/[0.03] dark:hover:text-gray-300",
   };
 
   if (path) {

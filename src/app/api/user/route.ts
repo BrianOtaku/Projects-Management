@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { convertBigIntToString } from '@/lib/utils'
+import { normalizeData } from '@/lib/utils'
 import bcrypt from 'bcrypt'
 
 export async function GET() {
@@ -11,7 +11,7 @@ export async function GET() {
                 team: true,
             },
         })
-        return NextResponse.json(convertBigIntToString(users), { status: 200 })
+        return NextResponse.json(normalizeData(users), { status: 200 })
     } catch (error) {
         return NextResponse.json({ message: 'Lỗi khi lấy users', error }, { status: 500 })
     }
@@ -33,7 +33,7 @@ export async function POST(req: Request) {
             },
         })
 
-        return NextResponse.json(convertBigIntToString(newUser), { status: 201 })
+        return NextResponse.json(normalizeData(newUser), { status: 201 })
     } catch (error) {
         return NextResponse.json({ message: 'Something went wrong', error }, { status: 500 })
     }
@@ -41,8 +41,9 @@ export async function POST(req: Request) {
 
 export async function PUT(req: NextRequest) {
     try {
+        const id = req.nextUrl.searchParams.get("id");
         const body = await req.json()
-        const { id, name, email, role } = body
+        const { name, email, role } = body
 
         if (!id) {
             return NextResponse.json({ message: 'Thiếu id người dùng' }, { status: 400 })
@@ -57,7 +58,7 @@ export async function PUT(req: NextRequest) {
             },
         })
 
-        return NextResponse.json(convertBigIntToString(updatedUser), { status: 200 })
+        return NextResponse.json(normalizeData(updatedUser), { status: 200 })
     } catch (error) {
         return NextResponse.json({ message: 'Lỗi khi cập nhật user', error }, { status: 500 })
     }

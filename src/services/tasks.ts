@@ -6,6 +6,11 @@ export async function getTasks() {
     return res.data;
 }
 
+export async function getTask(id: string | number) {
+    const res = await api.get(`${API_ENDPOINTS.TASK_ID}?id=${id}`);
+    return res.data;
+}
+
 export async function createTask(data: unknown) {
     const res = await api.post(API_ENDPOINTS.TASK, data);
     return res.data;

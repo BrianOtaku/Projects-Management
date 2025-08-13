@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { convertBigIntToString, getCurrentUser } from '@/lib/utils';
+import { normalizeData, getCurrentUser } from '@/lib/utils';
 
 export async function GET() {
     const user = await getCurrentUser();
@@ -46,7 +46,7 @@ export async function POST(req: Request) {
         },
     });
 
-    return NextResponse.json(convertBigIntToString(newTask), { status: 201 });
+    return NextResponse.json(normalizeData(newTask), { status: 201 });
 }
 
 // PUT: chỉ leader hoặc staff được phép, staff chỉ update status
@@ -94,7 +94,7 @@ export async function PUT(req: Request) {
 
         return NextResponse.json({
             message: 'Cập nhật thành công',
-            task: convertBigIntToString(updatedTask)
+            task: normalizeData(updatedTask)
         });
 
     } catch (err) {

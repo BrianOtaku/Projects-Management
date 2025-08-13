@@ -6,6 +6,11 @@ export async function getTeams() {
     return res.data;
 }
 
+export async function getTeam(id: string | number) {
+    const res = await api.get(`${API_ENDPOINTS.TEAM_ID}?id=${id}`);
+    return res.data;
+}
+
 export async function createTeam(data: unknown) {
     const res = await api.post(API_ENDPOINTS.TEAM, data);
     return res.data;

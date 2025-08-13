@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { convertBigIntToString } from '@/lib/utils'
+import { normalizeData } from '@/lib/utils'
 import { getCurrentUser } from '@/lib/utils'
 
 export async function GET() {
@@ -16,7 +16,7 @@ export async function GET() {
                 tasks: true,
             },
         })
-        return NextResponse.json(convertBigIntToString(projects), { status: 200 })
+        return NextResponse.json(normalizeData(projects), { status: 200 })
     } catch (error) {
         console.error('[GET /api/project]', error)
         return NextResponse.json({ error: 'Lỗi server' }, { status: 500 })
@@ -24,11 +24,11 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-    // const user = await getCurrentUser();
+    const user = await getCurrentUser();
 
-    // if (!user || user.role !== 'MANAGER') {
-    //     return NextResponse.json({ message: 'Only manager can create project' }, { status: 403 });
-    // }
+    if (!user || user.role !== 'MANAGER') {
+        return NextResponse.json({ message: 'Only manager can create project' }, { status: 403 });
+    }
 
     try {
         const body = await req.json();
@@ -70,14 +70,14 @@ export async function POST(req: Request) {
             },
         })
 
-        return NextResponse.json(convertBigIntToString(newProject), { status: 201 })
+        return NextResponse.json(normalizeData(newProject), { status: 201 })
     } catch (error) {
         console.error('[POST /api/project]', error)
         return NextResponse.json({ error: 'Lỗi khi tạo project' }, { status: 500 })
     }
 }
 
-export async function PUT(req: Request) {
+export async function PUT(req: NextRequest) {
     const user = await getCurrentUser();
 
     if (!user || user.role !== 'MANAGER') {
@@ -85,9 +85,14 @@ export async function PUT(req: Request) {
     }
 
     try {
+        const id = req.nextUrl.searchParams.get('id')
+
+        if (!id) {
+            return NextResponse.json({ message: 'Missing teamId in query' }, { status: 400 });
+        }
+
         const body = await req.json()
         const {
-            id,
             title,
             description,
             status,
@@ -114,7 +119,7 @@ export async function PUT(req: Request) {
             },
         })
 
-        return NextResponse.json(convertBigIntToString(updated), { status: 200 })
+        return NextResponse.json(normalizeData(updated), { status: 200 })
     } catch (error) {
         console.error('[PUT /api/project]', error)
         return NextResponse.json({ error: 'Lỗi khi cập nhật' }, { status: 500 })
