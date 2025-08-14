@@ -22,6 +22,6 @@ export async function updateTeam(id: string | number, data: unknown) {
 }
 
 export async function deleteTeam(id: string | number) {
-    const res = await api.delete(`${API_ENDPOINTS.TASK}?id=${id}`);
+    const res = await api.delete(`${API_ENDPOINTS.TEAM}?id=${id}`);
     return res.data;
 }

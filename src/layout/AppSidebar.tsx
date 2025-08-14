@@ -7,11 +7,10 @@ import { useSidebar } from "../context/SidebarContext";
 import {
   CalenderIcon,
   ChevronDownIcon,
+  FolderIcon_2,
   GridIcon,
   GroupIcon,
   HorizontaLDots,
-  PlugInIcon,
-  TableIcon,
 } from "../icons/index";
 
 type NavItem = {
@@ -28,22 +27,34 @@ const navItems: NavItem[] = [
     path: "/",
   },
   {
-    name: "Projects Management",
-    icon: <TableIcon />,
+    name: "Projects",
+    icon: <FolderIcon_2 />,
     path: "/projects-management",
   },
   {
-    name: "Teams Management",
-    icon: <TableIcon />,
+    name: "Teams",
+    icon: <GroupIcon />,
     path: "/teams-management",
   },
   {
-    icon: <CalenderIcon />,
-    name: "Calendar",
-    path: "/calendar",
-  },
-  {
-    icon: <GroupIcon />,
+    icon: (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width={24}
+        height={24}
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="icon icon-tabler icons-tabler-outline icon-tabler-user"
+      >
+        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+        <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+        <path d="M4 21c0-4 3-7 8-7s8 3 8 7" />
+      </svg>
+    ),
     name: "Staffs",
     path: "/staffs",
   },
@@ -51,12 +62,9 @@ const navItems: NavItem[] = [
 
 const othersItems: NavItem[] = [
   {
-    icon: <PlugInIcon />,
-    name: "Authentication",
-    subItems: [
-      { name: "Sign In", path: "/signin", pro: false },
-      { name: "Sign Up", path: "/signup", pro: false },
-    ],
+    icon: <CalenderIcon />,
+    name: "Calendar",
+    path: "/calendar",
   },
 ];
 
@@ -318,7 +326,7 @@ const AppSidebar: React.FC = () => {
                   }`}
               >
                 {isExpanded || isHovered || isMobileOpen ? (
-                  "Authentication"
+                  "Others"
                 ) : (
                   <HorizontaLDots />
                 )}

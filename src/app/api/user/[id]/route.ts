@@ -8,7 +8,8 @@ export async function GET(req: NextRequest) {
         if (!id) {
             return NextResponse.json({ message: "Thiếu id user" }, { status: 400 });
         }
-        const users = await prisma.user.findMany({
+        const users = await prisma.user.findUnique({
+            where: { id: BigInt(id) },
             include: {
                 tasks: true,
                 team: true,

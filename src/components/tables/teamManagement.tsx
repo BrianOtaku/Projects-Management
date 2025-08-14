@@ -10,6 +10,8 @@ import {
 } from "../ui/table";
 import { getTeams } from "@/services/teams";
 import { Team } from "@/constants/interfaces";
+import Link from "next/link";
+import { PencilIcon, PlusIcon } from "@/icons";
 
 export default function TeamManagement() {
   const [teams, setTeams] = useState<Team[]>([]);
@@ -35,8 +37,14 @@ export default function TeamManagement() {
 
   return (
     <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white px-4 pb-3 pt-4 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6">
-      <div className="flex flex-col gap-2 mb-4 sm:flex-row sm:items-center sm:justify-between">
-        <div></div>
+      <div className="flex flex-col gap-2 mb-4 flex-row items-center justify-between">
+        <Link
+          href="team/new-team"
+          className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200"
+        >
+          <PlusIcon />
+          New team
+        </Link>
         <div className="flex items-center gap-3">
           <button className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200">
             Filter
@@ -64,12 +72,14 @@ export default function TeamManagement() {
                 <TableCell isHeader className="px-4 py-3 font-medium text-gray-500 text-start text-base dark:text-gray-400">
                   Project Name
                 </TableCell>
+                <TableCell isHeader className="px-4 py-3 font-medium text-gray-500 text-start text-base dark:text-gray-400">
+                  Edit
+                </TableCell>
               </TableRow>
             </TableHeader>
 
             <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
               {teams.map((teams) => {
-                // const leader = teams.leader?.find((user) => user.role === "LEADER") || null;
 
                 return (
                   <TableRow key={teams.id.toString()}>
@@ -108,6 +118,11 @@ export default function TeamManagement() {
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
                       {teams.project?.title || "No Project Assigned"}
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                      <Link href={`team/edit-team/${teams.id}`} title="Edit Team">
+                        <PencilIcon className="fill-current hover:text-gray-800 dark:hover:text-white/90" />
+                      </Link>
                     </TableCell>
                   </TableRow>
                 );

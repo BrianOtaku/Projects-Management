@@ -2,17 +2,17 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
-import ComponentCard from '../../common/ComponentCard';
-import Label from '../Label';
-import Input from '../input/InputField';
-import Select from '../Select';
+import ComponentCard from '../../../common/ComponentCard';
+import Label from '../../Label';
+import Input from '../../input/InputField';
+import Select from '../../Select';
 import Button from '@/components/ui/button/Button';
-import { ChevronDownIcon } from '../../../icons';
+import { ChevronDownIcon } from '../../../../icons';
 import DatePicker from '@/components/form/date-picker';
-import TextArea from '../input/TextArea';
+import TextArea from '../../input/TextArea';
 import { deleteProject, getProject, updateProject } from '@/services/projects';
 import { getTeams } from '@/services/teams';
-import Checkbox from '../input/Checkbox';
+import Checkbox from '../../input/Checkbox';
 import { Status } from '@/constants/interfaces';
 import { useRouter } from 'next/navigation';
 

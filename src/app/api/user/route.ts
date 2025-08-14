@@ -9,6 +9,7 @@ export async function GET() {
             include: {
                 tasks: true,
                 team: true,
+                leader: true,
             },
         })
         return NextResponse.json(normalizeData(users), { status: 200 })

@@ -18,7 +18,7 @@ export interface User {
     password: string;
     role: Role;
     tasks?: Task;
-    Teams?: Team;
+    team?: Team;
     leader?: Team[];
 }
 

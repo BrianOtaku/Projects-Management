@@ -8,10 +8,12 @@ export async function GET(req: NextRequest) {
         if (!id) {
             return NextResponse.json({ message: "Thiếu id team" }, { status: 400 });
         }
-        const team = await prisma.team.findMany({
+        const team = await prisma.team.findUnique({
+            where: { id: BigInt(id) },
             include: {
                 members: true,
                 leader: true,
+                project: true,
             },
         })
         return NextResponse.json(normalizeData(team), { status: 200 })
