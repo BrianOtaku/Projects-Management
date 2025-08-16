@@ -1,7 +1,7 @@
 "use client";
 
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
-import StaffManagement from "@/components/user-profile/staffManagement";
+import UserManagement from "@/components/user-profile/userManagement";
 import { PaperPlaneIcon } from "@/icons";
 import React, { useEffect, useRef } from "react";
 
@@ -25,7 +25,7 @@ export default function Profile() {
 
   return (
     <div>
-      <PageBreadcrumb pageTitle="Staffs Management" />
+      <PageBreadcrumb pageTitle="Users Management" />
 
       <div className="md:flex items-center justify-normal mb-4 md:mb-6">
         <form className="">
@@ -62,7 +62,7 @@ export default function Profile() {
       </div>
 
       <div className="space-y-6">
-        <StaffManagement />
+        <UserManagement />
       </div>
     </div>
 

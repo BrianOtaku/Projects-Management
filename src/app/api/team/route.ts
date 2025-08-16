@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { normalizeData } from '@/lib/utils'
-// import { getCurrentUser } from '@/lib/utils'
+import { getCurrentUser } from '@/lib/utils'
 
 export async function GET() {
     try {
@@ -19,11 +19,11 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-    // const user = await getCurrentUser()
+    const user = await getCurrentUser()
 
-    // if (!user || user.role !== 'MANAGER') {
-    //     return NextResponse.json({ message: 'Only manager can create a team' }, { status: 403 })
-    // }
+    if (!user || user.role !== 'MANAGER') {
+        return NextResponse.json({ message: 'Only manager can create a team' }, { status: 403 })
+    }
 
     try {
         const body = await req.json()
@@ -61,11 +61,11 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PUT(req: NextRequest) {
-    // const user = await getCurrentUser();
+    const user = await getCurrentUser();
 
-    // if (!user || user.role !== 'MANAGER') {
-    //     return NextResponse.json({ message: 'Only manager can update a team' }, { status: 403 });
-    // }
+    if (!user || user.role !== 'MANAGER') {
+        return NextResponse.json({ message: 'Only manager can update a team' }, { status: 403 });
+    }
 
     try {
         const id = req.nextUrl.searchParams.get('id')
@@ -117,11 +117,11 @@ export async function PUT(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
-    // const user = await getCurrentUser();
+    const user = await getCurrentUser();
 
-    // if (!user || user.role !== 'MANAGER') {
-    //     return NextResponse.json({ message: 'Only manager can delete a team' }, { status: 403 });
-    // }
+    if (!user || user.role !== 'MANAGER') {
+        return NextResponse.json({ message: 'Only manager can delete a team' }, { status: 403 });
+    }
 
     try {
         const id = req.nextUrl.searchParams.get('id')

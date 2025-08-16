@@ -1,5 +1,5 @@
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
-import EditTeam from "@/components/form/form-elements/team/editTeam";
+import EditUser from "@/components/form/form-elements/user/editUser";
 import { Metadata } from "next";
 import React from "react";
 
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
 export default function FormElements() {
   return (
     <div>
-      <PageBreadcrumb pageTitle="Edit Team" />
-      <EditTeam />
+      <PageBreadcrumb pageTitle="Edit User" />
+      <EditUser />
     </div>
   );
 }

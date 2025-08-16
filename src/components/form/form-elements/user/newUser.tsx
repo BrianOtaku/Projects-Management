@@ -7,72 +7,100 @@ import Input from '../../input/InputField';
 import Select from '../../Select';
 import Button from '@/components/ui/button/Button';
 import { ChevronDownIcon } from '../../../../icons';
-import { createTeam } from '@/services/teams';
-import { getUsers } from '@/services/users';
 import { useRouter } from 'next/navigation';
+import { createUser } from '@/services/users';
 
-export default function NewTeam() {
-  const [teamName, setTeamName] = useState("");
-  const [leaderId, setLeaderId] = useState("");
+export default function NewUser() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [role, setRole] = useState("");
+  const [avatar, setAvatar] = useState("");
   const [options, setOptions] = useState<{ value: string; label: string }[]>([]);
 
   const router = useRouter();
 
   useEffect(() => {
-    const fetchLeader = async () => {
-      try {
-        const users = await getUsers();
-        const leaders = users.filter((user: { role: string }) => user.role === "LEADER");
-
-        const leaderOptions = leaders.map((leader: { id: unknown; name: unknown }) => ({
-          value: leader.id,
-          label: leader.name,
-        }));
-
-        setOptions(leaderOptions);
-      } catch (error) {
-        console.error('Error fetching leaders:', error);
-      }
-    };
-
-    fetchLeader();
+    const roles = [
+      { value: "MANAGER", label: "Manager" },
+      { value: "LEADER", label: "Leader" },
+      { value: "STAFF", label: "Staff" },
+    ];
+    setOptions(roles);
   }, []);
 
   const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
+
+    if (password !== confirmPassword) {
+      alert("Passwords do not match!");
+      return;
+    }
+
     try {
-      await createTeam({
-        teamName,
-        leaderId,
+      await createUser({
+        name,
+        email,
+        password,
+        role
       });
-      router.push("/teams-management");
+      router.push("/users-management");
     } catch (error) {
       console.error("Error creating project:", error);
     }
   };
 
   const handleCancel = () => {
-    router.push("/teams-management");
+    router.push("/users-management");
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
-        <ComponentCard title="Team">
-          <Label>Team Name</Label>
+
+        <ComponentCard title="User Details">
+          <Label>User Name</Label>
           <Input
             type="text"
-            value={teamName}
-            onChange={(e) => setTeamName(e.target.value)}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <Label>User Email</Label>
+          <Input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <Label>Avatar</Label>
+          <Input
+            type="text"
+            value={avatar}
+            onChange={(e) => setAvatar(e.target.value)}
           />
         </ComponentCard>
-        <ComponentCard title="Leader">
-          <Label>Select Leader</Label>
+
+        <ComponentCard title="Authentication">
+          <Label>Password</Label>
+          <Input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <Label>Confirm Password</Label>
+          <Input
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            error={confirmPassword !== "" && confirmPassword !== password}
+            hint={confirmPassword !== "" && confirmPassword !== password ? "Passwords do not match" : ""}
+          />
+          <Label>Select Role</Label>
           <div className="relative">
             <Select
               options={options}
-              placeholder="Select a leader"
-              onChange={(value) => setLeaderId(value)}
+              placeholder="Select a user role"
+              onChange={(value) => setRole(value)}
               className="dark:bg-dark-900"
             />
             <span className="absolute text-gray-500 -translate-y-1/2 pointer-events-none right-3 top-1/2 dark:text-gray-400">
@@ -80,6 +108,7 @@ export default function NewTeam() {
             </span>
           </div>
         </ComponentCard>
+
       </div>
 
       <div className="flex gap-6 justify-center sm:justify-start">
@@ -88,7 +117,7 @@ export default function NewTeam() {
           size="sm"
           variant="success"
         >
-          Create Project
+          Create User
         </Button>
 
         <Button

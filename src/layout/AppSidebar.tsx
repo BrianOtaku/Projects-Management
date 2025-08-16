@@ -55,8 +55,8 @@ const navItems: NavItem[] = [
         <path d="M4 21c0-4 3-7 8-7s8 3 8 7" />
       </svg>
     ),
-    name: "Staffs",
-    path: "/staffs",
+    name: "Users",
+    path: "/users-management",
   },
 ];
 
