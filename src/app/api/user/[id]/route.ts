@@ -20,3 +20,47 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ message: 'Lỗi khi lấy users', error }, { status: 500 })
     }
 }
+
+export async function PUT(req: NextRequest) {
+    try {
+        const id = req.nextUrl.searchParams.get("id");
+        const body = await req.json()
+        const { name, email, password } = body
+
+        if (!id) {
+            return NextResponse.json({ message: 'Thiếu id người dùng' }, { status: 400 })
+        }
+
+        const updatedUser = await prisma.user.update({
+            where: { id: BigInt(id) },
+            data: {
+                ...(name && { name }),
+                ...(email && { email }),
+                ...(password && { password })
+            },
+        })
+
+        return NextResponse.json(normalizeData(updatedUser), { status: 200 })
+    } catch (error) {
+        return NextResponse.json({ message: 'Lỗi khi cập nhật user', error }, { status: 500 })
+    }
+}
+
+export async function DELETE(req: NextRequest) {
+    try {
+        const id = req.nextUrl.searchParams.get('id')
+        if (!id) {
+            return NextResponse.json({ error: 'Thiếu ID' }, { status: 400 })
+        }
+
+        await prisma.user.delete({
+            where: { id: BigInt(id) },
+        })
+
+        return NextResponse.json({ message: 'Xoá thành công' })
+    } catch (error) {
+        console.error('[DELETE /api/project]', error)
+        return NextResponse.json({ error: 'Lỗi khi xoá project' }, { status: 500 })
+    }
+}
+

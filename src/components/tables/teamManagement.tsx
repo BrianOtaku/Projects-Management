@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
-import { getTeams } from "@/services/teams";
+import { getTeams } from "@/services/team";
 import { Team } from "@/constants/interfaces";
 import Link from "next/link";
 import { PencilIcon, PlusIcon } from "@/icons";

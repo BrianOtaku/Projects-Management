@@ -8,7 +8,7 @@ import Select from '../../Select';
 import Button from '@/components/ui/button/Button';
 import { ChevronDownIcon } from '../../../../icons';
 import { useRouter } from 'next/navigation';
-import { createUser } from '@/services/users';
+import { createUser } from '@/services/user';
 
 export default function NewUser() {
   const [name, setName] = useState("");
@@ -45,14 +45,14 @@ export default function NewUser() {
         password,
         role
       });
-      router.push("/users-management");
+      router.push("/admin/users-management");
     } catch (error) {
       console.error("Error creating project:", error);
     }
   };
 
   const handleCancel = () => {
-    router.push("/users-management");
+    router.push("/admin/users-management");
   }
 
   return (

@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { normalizeData } from '@/lib/utils'
 import bcrypt from 'bcrypt'
+import { getCurrentUser } from '@/lib/utils'
+
 
 export async function GET() {
     try {
@@ -19,6 +21,12 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
+    const user = await getCurrentUser()
+
+    if (!user || user.role !== 'MANAGER') {
+        return NextResponse.json({ message: 'Only manager can create a user' }, { status: 403 })
+    }
+
     try {
         const body = await req.json()
         const { name, email, password, role } = body
@@ -41,10 +49,17 @@ export async function POST(req: Request) {
 }
 
 export async function PUT(req: NextRequest) {
+    const user = await getCurrentUser()
+
+    if (!user || user.role !== 'MANAGER') {
+        return NextResponse.json({ message: 'Only manager can update a user' }, { status: 403 })
+    }
+
+
     try {
         const id = req.nextUrl.searchParams.get("id");
         const body = await req.json()
-        const { name, email, role } = body
+        const { role } = body
 
         if (!id) {
             return NextResponse.json({ message: 'Thiếu id người dùng' }, { status: 400 })
@@ -53,8 +68,6 @@ export async function PUT(req: NextRequest) {
         const updatedUser = await prisma.user.update({
             where: { id: BigInt(id) },
             data: {
-                ...(name && { name }),
-                ...(email && { email }),
                 ...(role && { role }),
             },
         })
@@ -66,6 +79,12 @@ export async function PUT(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
+    const user = await getCurrentUser()
+
+    if (!user || user.role !== 'MANAGER') {
+        return NextResponse.json({ message: 'Only manager can delete a user' }, { status: 403 })
+    }
+
     try {
         const id = req.nextUrl.searchParams.get('id')
         if (!id) {

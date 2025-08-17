@@ -9,31 +9,38 @@ export async function POST(req: Request) {
 
         const user = await prisma.user.findUnique({ where: { email } });
         if (!user) {
-            return NextResponse.json({ message: 'Sai email hoặc mật khẩu' }, { status: 401 });
+            return NextResponse.json(
+                { message: "Sai email hoặc mật khẩu" },
+                { status: 401 }
+            );
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return NextResponse.json({ message: 'Sai email hoặc mật khẩu' }, { status: 401 });
+            return NextResponse.json(
+                { message: "Sai email hoặc mật khẩu" },
+                { status: 401 }
+            );
         }
 
         const token = signToken({
             id: Number(user.id),
             email: user.email,
-            role: user.role
+            role: user.role,
         });
 
-        const res = NextResponse.json({ message: 'Đăng nhập thành công', token });
-        res.cookies.set('token', token, {
+        const res = NextResponse.json({ message: "Đăng nhập thành công" });
+
+        res.cookies.set("token", token, {
             httpOnly: true,
-            sameSite: 'strict',
-            secure: process.env.NODE_ENV === 'production',
-            maxAge: 60 * 60 * 24 // 1 day
+            sameSite: "strict",
+            secure: process.env.NODE_ENV === "production",
+            maxAge: 60 * 60 * 24, // 1 day
         });
 
         return res;
     } catch (err) {
         console.error(err);
-        return NextResponse.json({ message: 'Lỗi server' }, { status: 500 });
+        return NextResponse.json({ message: "Lỗi server" }, { status: 500 });
     }
 }

@@ -7,7 +7,7 @@ import Select from '../../Select';
 import Button from '@/components/ui/button/Button';
 import { ChevronDownIcon } from '../../../../icons';
 import { useParams, useRouter } from 'next/navigation';
-import { deleteUser, getUser, updateUser } from '@/services/users';
+import { deleteUser, getUser, updateUser } from '@/services/user';
 
 export default function EditUser() {
   const [role, setRole] = useState("");
@@ -48,7 +48,7 @@ export default function EditUser() {
       await updateUser(id, {
         role
       });
-      router.push("/users-management");
+      router.push("/admin/users-management");
     } catch (error) {
       console.error("Error creating project:", error);
     }
@@ -58,14 +58,14 @@ export default function EditUser() {
     e.preventDefault();
     try {
       await deleteUser(id)
-      router.push("/users-management");
+      router.push("/admin/users-management");
     } catch (error) {
       console.error("Error creating project:", error);
     }
   };
 
   const handleCancel = () => {
-    router.push("/users-management");
+    router.push("/admin/users-management");
   }
 
   return (

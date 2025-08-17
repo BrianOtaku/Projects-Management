@@ -10,7 +10,7 @@ import {
 } from "../ui/table";
 import Badge from "../ui/badge/Badge";
 import Link from "next/link";
-import { getProjects } from "@/services/projects";
+import { getProjects } from "@/services/project";
 import { Project } from "@/constants/interfaces";
 import { PencilIcon, PlusIcon } from "@/icons";
 export default function ProjectManagement() {

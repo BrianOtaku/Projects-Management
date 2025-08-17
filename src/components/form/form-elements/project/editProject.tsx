@@ -10,8 +10,8 @@ import Button from '@/components/ui/button/Button';
 import { ChevronDownIcon } from '../../../../icons';
 import DatePicker from '@/components/form/date-picker';
 import TextArea from '../../input/TextArea';
-import { deleteProject, getProject, updateProject } from '@/services/projects';
-import { getTeams } from '@/services/teams';
+import { deleteProject, getProject, updateProject } from '@/services/project';
+import { getTeams } from '@/services/team';
 import Checkbox from '../../input/Checkbox';
 import { Status } from '@/constants/interfaces';
 import { useRouter } from 'next/navigation';
@@ -77,7 +77,7 @@ export default function EditProject() {
         dueDate,
         description,
       });
-      router.push("/projects-management");
+      router.push("/admin/projects-management");
     } catch (error) {
       console.error("Error creating project:", error);
     }
@@ -87,14 +87,14 @@ export default function EditProject() {
     e.preventDefault();
     try {
       await deleteProject(id)
-      router.push("/projects-management");
+      router.push("/admin/projects-management");
     } catch (error) {
       console.error("Error creating project:", error);
     }
   };
 
   const handleCancel = () => {
-    router.push("/projects-management");
+    router.push("/admin/projects-management");
   };
 
   return (

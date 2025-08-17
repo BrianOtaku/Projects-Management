@@ -53,7 +53,8 @@ import MoreDotIcon from "./more-dot.svg";
 import BellIcon from "./bell.svg";
 import LoginIcon from "./login.svg";
 import LogoutIcon from "./logout.svg";
-import FolderIcon_2 from "./folder-2.svg"
+import FolderIcon_2 from "./folder-2.svg";
+import GoogleIcon from "./google.svg";
 
 export {
   LoginIcon,
@@ -112,4 +113,5 @@ export {
   ChevronUpIcon,
   ChatIcon,
   FolderIcon_2,
+  GoogleIcon
 };

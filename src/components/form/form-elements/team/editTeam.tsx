@@ -7,8 +7,8 @@ import Input from '../../input/InputField';
 import Select from '../../Select';
 import Button from '@/components/ui/button/Button';
 import { ChevronDownIcon } from '../../../../icons';
-import { deleteTeam, getTeam, updateTeam } from '@/services/teams';
-import { getUsers } from '@/services/users';
+import { deleteTeam, getTeam, updateTeam } from '@/services/team';
+import { getUsers } from '@/services/user';
 import { useParams, useRouter } from 'next/navigation';
 
 export default function EditTeam() {
@@ -63,7 +63,7 @@ export default function EditTeam() {
         teamName,
         leaderId,
       });
-      router.push("/teams-management");
+      router.push("/admin/teams-management");
     } catch (error) {
       console.error("Error creating project:", error);
     }
@@ -73,14 +73,14 @@ export default function EditTeam() {
     e.preventDefault();
     try {
       await deleteTeam(id)
-      router.push("/teams-management");
+      router.push("/admin/teams-management");
     } catch (error) {
       console.error("Error creating project:", error);
     }
   };
 
   const handleCancel = () => {
-    router.push("/teams-management");
+    router.push("/admin/teams-management");
   }
 
   return (

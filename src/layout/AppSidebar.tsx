@@ -24,17 +24,17 @@ const navItems: NavItem[] = [
   {
     icon: <GridIcon />,
     name: "Dashboard",
-    path: "/",
+    path: "/admin",
   },
   {
     name: "Projects",
     icon: <FolderIcon_2 />,
-    path: "/projects-management",
+    path: "/admin/projects-management",
   },
   {
     name: "Teams",
     icon: <GroupIcon />,
-    path: "/teams-management",
+    path: "/admin/teams-management",
   },
   {
     icon: (
@@ -56,7 +56,7 @@ const navItems: NavItem[] = [
       </svg>
     ),
     name: "Users",
-    path: "/users-management",
+    path: "/admin/users-management",
   },
 ];
 
@@ -64,7 +64,7 @@ const othersItems: NavItem[] = [
   {
     icon: <CalenderIcon />,
     name: "Calendar",
-    path: "/calendar",
+    path: "/admin/calendar",
   },
 ];
 

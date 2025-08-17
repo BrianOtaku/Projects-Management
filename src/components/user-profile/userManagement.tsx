@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { PencilIcon, PlusIcon } from "@/icons";
 import { User } from "@/constants/interfaces";
-import { getUsers } from "@/services/users";
+import { getUsers } from "@/services/user";
 import Badge from "../ui/badge/Badge";
 
 export default function UserManagement() {
