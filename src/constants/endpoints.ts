@@ -7,6 +7,7 @@ export enum API_ENDPOINTS {
     AUTH_SIGN_IN = '/api/auth/sign-in',
     AUTH_SIGN_OUT = '/api/auth/sign-out',
     AUTH_SIGN_UP = '/api/auth/sign-up',
+    AUTH_ME = '/api/auth/me',
 
     PROJECT_ID = '/api/project/[id]',
     TASK_ID = '/api/task/[id]',

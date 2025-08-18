@@ -57,7 +57,10 @@ export async function DELETE(req: NextRequest) {
             where: { id: BigInt(id) },
         })
 
-        return NextResponse.json({ message: 'Xoá thành công' })
+        const res = NextResponse.json({ message: 'Xóa thành công' });
+        res.cookies.set('token', '', { httpOnly: true, expires: new Date(0) });
+        return res;
+
     } catch (error) {
         console.error('[DELETE /api/project]', error)
         return NextResponse.json({ error: 'Lỗi khi xoá project' }, { status: 500 })

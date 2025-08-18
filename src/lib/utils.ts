@@ -25,7 +25,7 @@ export function verifyToken(token: string) {
 
 // Lấy token từ cookie
 export function getTokenFromCookie(req: NextRequest) {
-    return req.cookies.get('auth_token')?.value || null;
+    return req.cookies.get('token')?.value || null;
 }
 
 // Lấy user hiện tại từ cookie
@@ -45,7 +45,7 @@ export async function getCurrentUser(): Promise<JwtPayload | null> {
 
 // Set cookie auth_token
 export function setAuthCookie(res: NextResponse, token: string) {
-    res.cookies.set('auth_token', token, {
+    res.cookies.set('token', token, {
         httpOnly: true, // Không cho JS đọc
         secure: process.env.NODE_ENV === 'production', // Chỉ bật secure trên production
         sameSite: 'strict', // Ngăn CSRF

@@ -3,15 +3,15 @@
 import React, { useState, useEffect } from 'react';
 import ComponentCard from '../../../common/ComponentCard';
 import Label from '../../Label';
-import Select from '../../Select';
 import Button from '@/components/ui/button/Button';
-import { ChevronDownIcon } from '../../../../icons';
 import { useParams, useRouter } from 'next/navigation';
-import { deleteUser, getUser, updateUser } from '@/services/user';
+import { deleteMe, getMe, updateMe } from '@/services/user';
+import Input from '../../input/InputField';
 
-export default function EditUser() {
-  const [role, setRole] = useState("");
-  const [options, setOptions] = useState<{ value: string; label: string }[]>([]);
+export default function EditMe() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [avatar, setAvatar] = useState("");
 
   const router = useRouter();
 
@@ -20,34 +20,28 @@ export default function EditUser() {
   useEffect(() => {
     const fetchTeamDetail = async () => {
       try {
-        const response = await getUser(id);
+        const response = await getMe();
         if (response) {
-          setRole(response.role);
+          setName(response.name);
+          setEmail(response.email);
+          setAvatar(response.avatar);
         }
       } catch (error) {
         console.error('Error fetching project details:', error);
       }
     };
     fetchTeamDetail();
-  }, [id]);
-
-  useEffect(() => {
-    const roles = [
-      { value: "MANAGER", label: "Manager" },
-      { value: "LEADER", label: "Leader" },
-      { value: "STAFF", label: "Staff" },
-    ];
-    setOptions(roles);
   }, []);
 
   const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
 
     try {
-      await updateUser(id, {
-        role
+      await updateMe(id, {
+        name,
+        email
       });
-      router.push("/admin/users-management");
+      router.push("/admin");
     } catch (error) {
       console.error("Error creating project:", error);
     }
@@ -56,35 +50,40 @@ export default function EditUser() {
   const handleDelete = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     try {
-      await deleteUser(id)
-      router.push("/admin/users-management");
+      await deleteMe(id)
+      router.push("/signin");
     } catch (error) {
       console.error("Error creating project:", error);
     }
   };
 
   const handleCancel = () => {
-    router.push("/admin/users-management");
+    router.push("/admin");
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
 
-        <ComponentCard title="Authentication">
-          <Label>Select Role</Label>
-          <div className="relative">
-            <Select
-              options={options}
-              value={role}
-              placeholder="Select a user role"
-              onChange={(value) => setRole(value)}
-              className="dark:bg-dark-900"
-            />
-            <span className="absolute text-gray-500 -translate-y-1/2 pointer-events-none right-3 top-1/2 dark:text-gray-400">
-              <ChevronDownIcon />
-            </span>
-          </div>
+        <ComponentCard title="User Details">
+          <Label>User Name</Label>
+          <Input
+            type="text"
+            defaultValue={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <Label>User Email</Label>
+          <Input
+            type="email"
+            defaultValue={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <Label>Avatar</Label>
+          <Input
+            type="text"
+            defaultValue={avatar}
+            onChange={(e) => setAvatar(e.target.value)}
+          />
         </ComponentCard>
 
       </div>

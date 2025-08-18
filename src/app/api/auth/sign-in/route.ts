@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcrypt';
-import { signToken } from '@/lib/utils';
+import { setAuthCookie, signToken } from '@/lib/utils';
 
 export async function POST(req: Request) {
     try {
@@ -25,18 +25,11 @@ export async function POST(req: Request) {
 
         const token = signToken({
             id: Number(user.id),
-            email: user.email,
             role: user.role,
         });
 
-        const res = NextResponse.json({ message: "Đăng nhập thành công" });
-
-        res.cookies.set("token", token, {
-            httpOnly: true,
-            sameSite: "strict",
-            secure: process.env.NODE_ENV === "production",
-            maxAge: 60 * 60 * 24, // 1 day
-        });
+        const res = NextResponse.json({ message: "Login successful" });
+        setAuthCookie(res, token);
 
         return res;
     } catch (err) {

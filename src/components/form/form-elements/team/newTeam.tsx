@@ -88,7 +88,7 @@ export default function NewTeam() {
           size="sm"
           variant="success"
         >
-          Create Project
+          Create Team
         </Button>
 
         <Button

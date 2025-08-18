@@ -1,5 +1,11 @@
 import { redirect } from "next/navigation";
+import { getCurrentUser } from "@/lib/utils";
 
-export default function DefaultPage() {
-    redirect("/signin");
+export default async function Page() {
+    const user = await getCurrentUser();
+
+    if (!user) {
+        redirect("/auth/signin");
+    }
+    redirect("/admin");
 }
