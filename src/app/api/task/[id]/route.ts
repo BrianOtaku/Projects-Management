@@ -16,7 +16,14 @@ export async function GET(req: NextRequest) {
             return NextResponse.json({ message: 'Access denied' }, { status: 403 });
         }
 
-        const tasks = await prisma.task.findMany();
+        const tasks = await prisma.task.findUnique({
+            where: { id: BigInt(id) },
+            include: {
+                project: true,
+                user: true,
+            },
+        });
+
         if (!tasks) {
             return NextResponse.json({ message: "Không tìm thấy task" }, { status: 404 });
         }

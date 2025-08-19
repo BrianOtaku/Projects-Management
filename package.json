@@ -37,7 +37,8 @@
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
     "swiper": "^11.2.0",
-    "tailwind-merge": "^2.6.0"
+    "tailwind-merge": "^2.6.0",
+    "tailwind-scrollbar-hide": "^4.0.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

@@ -9,8 +9,13 @@ export async function GET() {
         return NextResponse.json({ message: 'Access denied' }, { status: 403 });
     }
 
-    const tasks = await prisma.task.findMany();
-    return NextResponse.json(tasks);
+    const tasks = await prisma.task.findMany({
+        include: {
+            project: true,
+            user: true,
+        }
+    });
+    return NextResponse.json(normalizeData(tasks));
 }
 
 export async function POST(req: Request) {

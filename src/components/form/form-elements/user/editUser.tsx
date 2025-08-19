@@ -11,6 +11,8 @@ import { deleteUser, getUser, updateUser } from '@/services/user';
 
 export default function EditUser() {
   const [role, setRole] = useState("");
+  const [teamId, setTeamId] = useState("");
+
   const [options, setOptions] = useState<{ value: string; label: string }[]>([]);
 
   const router = useRouter();
@@ -23,6 +25,7 @@ export default function EditUser() {
         const response = await getUser(id);
         if (response) {
           setRole(response.role);
+          setTeamId(response.teamId)
         }
       } catch (error) {
         console.error('Error fetching project details:', error);
@@ -45,9 +48,10 @@ export default function EditUser() {
 
     try {
       await updateUser(id, {
-        role
+        role,
+        teamId
       });
-      router.push("/admin/users-management");
+      router.push("/admin/staffs-management");
     } catch (error) {
       console.error("Error creating project:", error);
     }
@@ -57,14 +61,14 @@ export default function EditUser() {
     e.preventDefault();
     try {
       await deleteUser(id)
-      router.push("/admin/users-management");
+      router.push("/admin/staffs-management");
     } catch (error) {
       console.error("Error creating project:", error);
     }
   };
 
   const handleCancel = () => {
-    router.push("/admin/users-management");
+    router.push("/admin/staffs-management");
   }
 
   return (
@@ -86,7 +90,6 @@ export default function EditUser() {
             </span>
           </div>
         </ComponentCard>
-
       </div>
 
       <div className="flex gap-6 justify-center sm:justify-start">

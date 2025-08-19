@@ -2,19 +2,19 @@
 import React, { useEffect, useState } from "react";
 // import Image from "next/image";
 import Link from "next/link";
-import { PencilIcon, PlusIcon } from "@/icons";
+import { PencilIcon } from "@/icons";
 import { User } from "@/constants/interfaces";
 import { getUsers } from "@/services/user";
 import Badge from "../ui/badge/Badge";
 
-export default function UserManagement() {
+export default function LeaderManagement() {
   const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const data = await getUsers();
-        const filteredUsers = data.filter((user: User) => user.role !== "MANAGER");
+        const filteredUsers = data.filter((user: User) => user.role === "LEADER");
         setUsers(filteredUsers);
       } catch (error) {
         console.error("Error fetching users:", error);
@@ -26,14 +26,7 @@ export default function UserManagement() {
   return (
     <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white px-4 pb-3 pt-4 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6">
       {/* Header buttons */}
-      <div className="flex flex-col gap-2 mb-4 flex-row items-center justify-between">
-        <Link
-          href="user/new-user"
-          className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200"
-        >
-          <PlusIcon />
-          New User
-        </Link>
+      <div className="flex flex-col gap-2 mb-4 flex-row items-center justify-end">
         <div className="flex items-center gap-3">
           <button className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200">
             Filter
@@ -74,13 +67,7 @@ export default function UserManagement() {
                 <div className="flex flex-col items-center gap-1 text-center xl:flex-row xl:gap-3 xl:text-left">
                   <Badge
                     size="sm"
-                    color={
-                      user.role === "MANAGER"
-                        ? "error"
-                        : user.role === "LEADER"
-                          ? "info"
-                          : "success"
-                    }
+                    color="primary"
                   >
                     {user.role}
                   </Badge>
@@ -90,17 +77,23 @@ export default function UserManagement() {
                   <div className="flex flex-wrap gap-1">
                     {user.leader?.length
                       ? user.leader.slice(0, 2).map((t, i) => (
-                        <span
+                        <Badge
+                          size="sm"
                           key={i}
-                          className="px-2 py-0.5 text-xs rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+                          color="light"
                         >
                           {t.teamName}
-                        </span>
+                        </Badge>
                       ))
                       : <span className="text-sm text-gray-400">No Team Assigned</span>
                     }
                     {user.leader && user.leader.length > 2 && (
-                      <span className="text-xs text-gray-400">+{user.leader.length - 2} more</span>
+                      <Badge
+                        size="sm"
+                        color="light"
+                      >
+                        +{user.leader.length - 2} more
+                      </Badge>
                     )}
                   </div>
 
@@ -110,7 +103,7 @@ export default function UserManagement() {
 
             <Link
               title="Edit User"
-              href={`user/edit-user/${user.id}`}
+              href={`user/edit-leader/${user.id}`}
               className="flex w-full items-center justify-center gap-2 rounded-full border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200 lg:inline-flex lg:w-auto"
             >
               <PencilIcon />

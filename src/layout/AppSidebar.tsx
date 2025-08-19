@@ -11,6 +11,7 @@ import {
   GridIcon,
   GroupIcon,
   HorizontaLDots,
+  TaskIcon,
 } from "../icons/index";
 
 type NavItem = {
@@ -32,9 +33,37 @@ const navItems: NavItem[] = [
     path: "/admin/projects-management",
   },
   {
+    name: "Tasks",
+    icon: <TaskIcon />,
+    path: "/admin/tasks-management",
+  },
+  {
     name: "Teams",
     icon: <GroupIcon />,
     path: "/admin/teams-management",
+  },
+  {
+    icon: (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width={24}
+        height={24}
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="icon icon-tabler icons-tabler-outline icon-tabler-user-shield"
+      >
+        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+        <path d="M22 16c0 4 -2.5 6 -3.5 6s-3.5 -2 -3.5 -6c1 0 2.5 -.5 3.5 -1.5c1 1 2.5 1.5 3.5 1.5z" />
+        <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+        <path d="M4 21c0-4 3-7 8-7" />
+      </svg>
+    ),
+    name: "Leaders",
+    path: "/admin/leaders-management",
   },
   {
     icon: (
@@ -55,8 +84,8 @@ const navItems: NavItem[] = [
         <path d="M4 21c0-4 3-7 8-7s8 3 8 7" />
       </svg>
     ),
-    name: "Users",
-    path: "/admin/users-management",
+    name: "Staffs",
+    path: "/admin/staffs-management",
   },
 ];
 

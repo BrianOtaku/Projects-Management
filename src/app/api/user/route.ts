@@ -55,20 +55,36 @@ export async function PUT(req: NextRequest) {
         return NextResponse.json({ message: 'Only manager can update a user' }, { status: 403 })
     }
 
-
     try {
         const id = req.nextUrl.searchParams.get("id");
         const body = await req.json()
-        const { role } = body
+        const { role, teamId } = body
 
         if (!id) {
             return NextResponse.json({ message: 'Thiếu id người dùng' }, { status: 400 })
         }
 
+        // 🔎 Lấy user trước để check
+        const existingUser = await prisma.user.findUnique({
+            where: { id: BigInt(id) },
+            include: { leader: true }, // check quan hệ leader
+        })
+
+        if (!existingUser) {
+            return NextResponse.json({ message: 'Không tìm thấy user' }, { status: 404 })
+        }
+
+        // ❌ Nếu user đang là leader của ít nhất 1 team → không cho đổi role
+        if (existingUser.leader.length > 0 && role && role !== existingUser.role) {
+            return NextResponse.json({ message: 'Không thể đổi role vì user đang là leader của một team' }, { status: 400 })
+        }
+
+        // ✅ Update
         const updatedUser = await prisma.user.update({
             where: { id: BigInt(id) },
             data: {
                 ...(role && { role }),
+                ...(teamId && { teamId }),
             },
         })
 

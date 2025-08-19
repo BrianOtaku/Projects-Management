@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
 
     try {
         const body = await req.json()
-        const { teamName, leaderId } = body
+        const { teamName, leaderId, members } = body
 
         const leader = await prisma.user.findUnique({
             where: { id: BigInt(leaderId) },
@@ -50,6 +50,9 @@ export async function POST(req: NextRequest) {
             data: {
                 teamName,
                 leaderId: BigInt(leaderId),
+                members: {
+                    connect: members.map((id: string | number | bigint | boolean) => ({ id: BigInt(id) })),
+                },
             },
             include: { members: true },
         })
@@ -75,7 +78,7 @@ export async function PUT(req: NextRequest) {
         }
 
         const body = await req.json();
-        const { teamName, leaderId } = body;
+        const { teamName, leaderId, members } = body;
 
         const leader = await prisma.user.findUnique({
             where: { id: BigInt(leaderId) },
@@ -105,7 +108,10 @@ export async function PUT(req: NextRequest) {
             where: { id: BigInt(id) },
             data: {
                 teamName: teamName ?? existingTeam.teamName,
-                leaderId: BigInt(leaderId) ?? existingTeam.leaderId,
+                leaderId: leaderId ? BigInt(leaderId) : existingTeam.leaderId,
+                members: {
+                    set: members.map((memberId: string) => ({ id: BigInt(memberId) })),
+                },
             }
         });
 

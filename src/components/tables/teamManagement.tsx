@@ -61,16 +61,13 @@ export default function TeamManagement() {
             <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
               <TableRow>
                 <TableCell isHeader className="px-5 py-4 sm:px-6 font-medium text-gray-500 text-start text-base dark:text-gray-400">
-                  Leader
-                </TableCell>
-                <TableCell isHeader className="px-4 py-3 font-medium text-gray-500 text-start text-base dark:text-gray-400">
                   Team Name
                 </TableCell>
                 <TableCell isHeader className="px-4 py-3 font-medium text-gray-500 text-start text-base dark:text-gray-400">
-                  Members
+                  Leader
                 </TableCell>
                 <TableCell isHeader className="px-4 py-3 font-medium text-gray-500 text-start text-base dark:text-gray-400">
-                  Project Name
+                  Members
                 </TableCell>
                 <TableCell isHeader className="px-4 py-3 font-medium text-gray-500 text-start text-base dark:text-gray-400">
                   Edit
@@ -83,20 +80,28 @@ export default function TeamManagement() {
 
                 return (
                   <TableRow key={teams.id.toString()}>
-                    <TableCell className="px-5 py-4 sm:px-6 text-start">
+                    <TableCell className="px-5 py-4 sm:px-6 font-medium text-gray-800 text-start text-theme-sm dark:text-white/90" >
+                      {teams.teamName}
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
                       <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 overflow-hidden border border-gray-200 rounded-full dark:border-gray-800">
+                          {/* <Image
+                            width={80}
+                            height={80}
+                            src={user.avatar || "/images/user/default.jpg"}
+                            alt={user.name}
+                          /> */}
+                        </div>
                         <div>
                           <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
-                            {teams.leader?.name || "N/A"}
+                            {teams.leader?.name || "No Leader Assigned"}
                           </span>
                           <span className="block text-gray-500 text-theme-xs dark:text-gray-400">
                             {teams.leader?.email || "N/A"}
                           </span>
                         </div>
                       </div>
-                    </TableCell>
-                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                      {teams.teamName}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
                       <div className="flex -space-x-2">
@@ -115,9 +120,6 @@ export default function TeamManagement() {
                           </div>
                         ))}
                       </div>
-                    </TableCell>
-                    <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                      {teams.project?.title || "No Project Assigned"}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                       <Link href={`team/edit-team/${teams.id}`} title="Edit Team">

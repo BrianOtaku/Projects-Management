@@ -17,17 +17,17 @@ export interface User {
     email: string;
     password: string;
     role: Role;
-    tasks?: Task;
+    tasks: Task[];
     team?: Team;
-    leader?: Team[];
+    leader: Team[];
 }
 
 export interface Team {
     id: number;
     teamName: string;
-    members?: User[];
+    members: User[];
     project?: Project;
-    leaderId: number;
+    leaderId?: number;
     leader?: User;
 }
 
@@ -39,8 +39,8 @@ export interface Project {
     startDate: Date;
     dueDate: Date;
     progress: number;
-    teamId: number;
-    team: Team;
+    teamId?: number;
+    team?: Team;
     tasks?: Task[];
 }
 

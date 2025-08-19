@@ -3,23 +3,33 @@
 import React, { useState, useEffect } from 'react';
 import ComponentCard from '../../../common/ComponentCard';
 import Label from '../../Label';
-import Input from '../../input/InputField';
 import Select from '../../Select';
 import Button from '@/components/ui/button/Button';
 import { ChevronDownIcon } from '../../../../icons';
-import { useRouter } from 'next/navigation';
-import { createUser } from '@/services/user';
+import { useParams, useRouter } from 'next/navigation';
+import { deleteUser, getUser, updateUser } from '@/services/user';
 
-export default function NewUser() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+export default function EditUser() {
   const [role, setRole] = useState("");
-  const [avatar, setAvatar] = useState("");
   const [options, setOptions] = useState<{ value: string; label: string }[]>([]);
 
   const router = useRouter();
+
+  const { id } = useParams<{ id: string }>();
+
+  useEffect(() => {
+    const fetchTeamDetail = async () => {
+      try {
+        const response = await getUser(id);
+        if (response) {
+          setRole(response.role);
+        }
+      } catch (error) {
+        console.error('Error fetching project details:', error);
+      }
+    };
+    fetchTeamDetail();
+  }, [id]);
 
   useEffect(() => {
     const roles = [
@@ -33,72 +43,40 @@ export default function NewUser() {
   const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
 
-    if (password !== confirmPassword) {
-      alert("Passwords do not match!");
-      return;
-    }
-
     try {
-      await createUser({
-        name,
-        email,
-        password,
+      await updateUser(id, {
         role
       });
-      router.push("/admin/staffs-management");
+      router.push("/admin/leaders-management");
+    } catch (error) {
+      console.error("Error creating project:", error);
+    }
+  };
+
+  const handleDelete = async (e: { preventDefault: () => void; }) => {
+    e.preventDefault();
+    try {
+      await deleteUser(id)
+      router.push("/admin/leaders-management");
     } catch (error) {
       console.error("Error creating project:", error);
     }
   };
 
   const handleCancel = () => {
-    router.push("/admin/staffs-management");
+    router.push("/admin/leaders-management");
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
 
-        <ComponentCard title="User Details">
-          <Label>User Name</Label>
-          <Input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <Label>User Email</Label>
-          <Input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <Label>Avatar</Label>
-          <Input
-            type="text"
-            value={avatar}
-            onChange={(e) => setAvatar(e.target.value)}
-          />
-        </ComponentCard>
-
         <ComponentCard title="Authentication">
-          <Label>Password</Label>
-          <Input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <Label>Confirm Password</Label>
-          <Input
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            error={confirmPassword !== "" && confirmPassword !== password}
-            hint={confirmPassword !== "" && confirmPassword !== password ? "Passwords do not match" : ""}
-          />
           <Label>Select Role</Label>
           <div className="relative">
             <Select
               options={options}
+              value={role}
               placeholder="Select a user role"
               onChange={(value) => setRole(value)}
               className="dark:bg-dark-900"
@@ -115,9 +93,17 @@ export default function NewUser() {
         <Button
           type="submit"
           size="sm"
-          variant="success"
+          variant="primary"
         >
-          Create User
+          Update
+        </Button>
+
+        <Button
+          onClick={handleDelete}
+          size="sm"
+          variant="error"
+        >
+          Delete
         </Button>
 
         <Button

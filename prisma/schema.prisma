@@ -37,8 +37,8 @@ model Team {
   teamName String
   project  Project?
   members  User[]
-  leaderId BigInt
-  leader   User     @relation("TeamLeader", fields: [leaderId], references: [id])
+  leaderId BigInt?
+  leader   User?    @relation("TeamLeader", fields: [leaderId], references: [id])
 }
 
 model Project {
