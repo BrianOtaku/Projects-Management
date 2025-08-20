@@ -19,7 +19,15 @@ export async function GET(req: NextRequest) {
         const tasks = await prisma.task.findUnique({
             where: { id: BigInt(id) },
             include: {
-                project: true,
+                project: {
+                    include: {
+                        team: {
+                            include: {
+                                members: true,
+                            },
+                        },
+                    },
+                },
                 user: true,
             },
         });

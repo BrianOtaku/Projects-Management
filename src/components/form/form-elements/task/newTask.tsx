@@ -9,15 +9,15 @@ import Button from '@/components/ui/button/Button';
 import { ChevronDownIcon } from '../../../../icons';
 import DatePicker from '@/components/form/date-picker';
 import TextArea from '../../input/TextArea';
-import { createProject } from '@/services/project';
-import { getTeams } from '@/services/team';
+import { getProject } from '@/services/project';
 import Checkbox from '../../input/Checkbox';
-import { Status } from '@/constants/interfaces';
-import { useRouter } from 'next/navigation';
+import { Status, User } from '@/constants/interfaces';
+import { useParams, useRouter } from 'next/navigation';
+import { createTask } from '@/services/task';
 
-export default function NewProject() {
+export default function NewTask() {
   const [title, setTitle] = useState("");
-  const [teamId, setTeamId] = useState("");
+  const [userId, setUserId] = useState("");
   const [startDate, setStartDate] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [description, setDescription] = useState("");
@@ -27,48 +27,53 @@ export default function NewProject() {
 
   const router = useRouter();
 
+  const { id } = useParams<{ id: string }>();
+
   useEffect(() => {
-    const fetchTeams = async () => {
+    const fetchMembers = async () => {
       try {
-        const teams = await getTeams();
-        const teamOptions = teams.map((team: { id: unknown; teamName: unknown; }) => ({
-          value: team.id,
-          label: team.teamName,
+        const project = await getProject(id);
+        const members = project.team?.members || [];
+        const memberOptions = members.map((member: User) => ({
+          value: member.id,
+          label: member.name,
         }));
-        setOptions(teamOptions);
+
+        setOptions(memberOptions);
       } catch (error) {
-        console.error('Error fetching teams:', error);
+        console.error("Error fetching members:", error);
       }
     };
 
-    fetchTeams();
-  }, []);
+    fetchMembers();
+  }, [id]);
 
   const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     try {
-      await createProject({
+      await createTask({
         title,
-        teamId,
+        projectId: id,
+        userId,
         status,
         startDate,
         dueDate,
         description,
       });
-      router.push("/admin/projects-management");
+      router.push("/admin/leader-projects");
     } catch (error) {
       console.error("Error creating project:", error);
     }
   };
 
   const handleCancel = () => {
-    router.push("/admin/projects-management");
+    router.push("/admin/leader-projects");
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
-        <ComponentCard title="Project">
+        <ComponentCard title="Task">
           <Label>Title</Label>
           <Input
             type="text"
@@ -76,12 +81,12 @@ export default function NewProject() {
             onChange={(e) => setTitle(e.target.value)}
           />
 
-          <Label>Select Team</Label>
+          <Label>Select Member</Label>
           <div className="relative">
             <Select
               options={options}
-              placeholder="Select a team"
-              onChange={(value) => setTeamId(value)}
+              placeholder="Select a member"
+              onChange={(value) => setUserId(value)}
               className="dark:bg-dark-900"
             />
             <span className="absolute text-gray-500 -translate-y-1/2 pointer-events-none right-3 top-1/2 dark:text-gray-400">
@@ -146,7 +151,7 @@ export default function NewProject() {
           size="sm"
           variant="success"
         >
-          Create Project
+          Create Task
         </Button>
 
         <Button

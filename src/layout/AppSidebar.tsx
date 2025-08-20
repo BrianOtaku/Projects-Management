@@ -13,12 +13,22 @@ import {
   HorizontaLDots,
   TaskIcon,
 } from "../icons/index";
+import { User } from "@/constants/interfaces";
+import { getMe } from "@/services/user";
+
+type Role = "MANAGER" | "LEADER" | "STAFF";
 
 type NavItem = {
   name: string;
   icon: React.ReactNode;
   path?: string;
-  subItems?: { name: string; path: string; pro?: boolean; new?: boolean }[];
+  subItems?: {
+    name: string;
+    path: string;
+    pro?: boolean;
+    new?: boolean;
+  }[];
+  roles?: Role[];
 };
 
 const navItems: NavItem[] = [
@@ -33,9 +43,22 @@ const navItems: NavItem[] = [
     path: "/admin/projects-management",
   },
   {
+    name: "Your Projects",
+    icon: <FolderIcon_2 />,
+    path: "/admin/leader-projects",
+    roles: ["LEADER"],
+  },
+  {
     name: "Tasks",
     icon: <TaskIcon />,
     path: "/admin/tasks-management",
+    roles: ["LEADER"],
+  },
+  {
+    name: "Your Tasks",
+    icon: <TaskIcon />,
+    path: "/admin/staff-tasks",
+    roles: ["STAFF"],
   },
   {
     name: "Teams",
@@ -98,6 +121,32 @@ const othersItems: NavItem[] = [
 ];
 
 const AppSidebar: React.FC = () => {
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getMe();
+        setUser(data);
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const filteredNavItems = navItems.filter((item) => {
+    if (!item.roles) return true;
+    if (!user?.role) return false;
+    return item.roles.includes(user.role);
+  });
+
+  const filteredOthersItems = othersItems.filter((item) => {
+    if (!item.roles) return true;
+    if (!user?.role) return false;
+    return item.roles.includes(user.role);
+  });
+
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
   const pathname = usePathname();
 
@@ -344,7 +393,7 @@ const AppSidebar: React.FC = () => {
                   <HorizontaLDots />
                 )}
               </h2>
-              {renderMenuItems(navItems, "main")}
+              {renderMenuItems(filteredNavItems, "main")}
             </div>
 
             <div className="">
@@ -360,7 +409,7 @@ const AppSidebar: React.FC = () => {
                   <HorizontaLDots />
                 )}
               </h2>
-              {renderMenuItems(othersItems, "others")}
+              {renderMenuItems(filteredOthersItems, "others")}
             </div>
           </div>
         </nav>

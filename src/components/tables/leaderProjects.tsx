@@ -12,9 +12,10 @@ import Badge from "../ui/badge/Badge";
 import Link from "next/link";
 import { getProjects } from "@/services/project";
 import { Project } from "@/constants/interfaces";
-import { PencilIcon, PlusIcon } from "@/icons";
+import { TaskIcon } from "@/icons";
+import { getMe } from "@/services/user";
 
-export default function ProjectManagement() {
+export default function LeaderProjects() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -22,7 +23,13 @@ export default function ProjectManagement() {
     async function fetchData() {
       try {
         const data = await getProjects();
-        setProjects(data);
+        const user = await getMe();
+
+        const filterData = data.filter(
+          (project: Project) => project.team?.leaderId === user.id
+        );
+
+        setProjects(filterData);
       } catch (err) {
         console.error("Lỗi khi load projects:", err);
       } finally {
@@ -38,14 +45,7 @@ export default function ProjectManagement() {
 
   return (
     <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white px-4 pb-3 pt-4 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6">
-      <div className="flex flex-col gap-2 mb-4 flex-row items-center justify-between">
-        <Link
-          href="project/new-project"
-          className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200"
-        >
-          <PlusIcon />
-          New project
-        </Link>
+      <div className="flex flex-col gap-2 mb-4 flex-row items-center justify-end">
         <div className="flex items-center gap-3">
           <button className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200">
             Filter
@@ -77,7 +77,7 @@ export default function ProjectManagement() {
                   Progress
                 </TableCell>
                 <TableCell isHeader className="px-4 py-3 font-medium text-gray-500 text-center text-base dark:text-gray-400">
-                  Edit
+                  Task
                 </TableCell>
               </TableRow>
             </TableHeader>
@@ -125,8 +125,8 @@ export default function ProjectManagement() {
                       {project.progress}%
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                      <Link href={`project/edit-project/${project.id}`} title="Edit Project" className="flex justify-center">
-                        <PencilIcon className="fill-current hover:text-gray-800 dark:hover:text-white/90" />
+                      <Link href={`task/new-task/${project.id}`} title="New Task" className="flex justify-center">
+                        <TaskIcon className="fill-current hover:text-gray-800 dark:hover:text-white/90" />
                       </Link>
                     </TableCell>
                   </TableRow>

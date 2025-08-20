@@ -69,7 +69,7 @@ export default function TeamManagement() {
                 <TableCell isHeader className="px-4 py-3 font-medium text-gray-500 text-start text-base dark:text-gray-400">
                   Members
                 </TableCell>
-                <TableCell isHeader className="px-4 py-3 font-medium text-gray-500 text-start text-base dark:text-gray-400">
+                <TableCell isHeader className="px-4 py-3 font-medium text-gray-500 text-center text-base dark:text-gray-400">
                   Edit
                 </TableCell>
               </TableRow>
@@ -122,7 +122,7 @@ export default function TeamManagement() {
                       </div>
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                      <Link href={`team/edit-team/${teams.id}`} title="Edit Team">
+                      <Link href={`team/edit-team/${teams.id}`} title="Edit Team" className="flex justify-center">
                         <PencilIcon className="fill-current hover:text-gray-800 dark:hover:text-white/90" />
                       </Link>
                     </TableCell>

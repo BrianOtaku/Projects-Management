@@ -103,8 +103,25 @@ export async function DELETE(req: NextRequest) {
 
     try {
         const id = req.nextUrl.searchParams.get('id')
+
         if (!id) {
             return NextResponse.json({ error: 'Thiếu ID' }, { status: 400 })
+        }
+
+        const existingUser = await prisma.user.findUnique({
+            where: { id: BigInt(id) },
+            include: { leader: true }, // check quan hệ leader
+        })
+
+        if (!existingUser) {
+            return NextResponse.json({ message: 'Không tìm thấy user' }, { status: 404 })
+        }
+
+        if (existingUser.leader.length > 0) {
+            return NextResponse.json(
+                { message: 'Không thể xóa vì user đang là leader của một team' },
+                { status: 400 }
+            );
         }
 
         await prisma.user.delete({

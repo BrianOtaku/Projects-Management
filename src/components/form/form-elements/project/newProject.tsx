@@ -68,7 +68,7 @@ export default function NewProject() {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
-        <ComponentCard title="Project">
+        <ComponentCard title="Project Detail">
           <Label>Title</Label>
           <Input
             type="text"
