@@ -10,10 +10,9 @@ import Button from '@/components/ui/button/Button';
 import { ChevronDownIcon } from '../../../../icons';
 import DatePicker from '@/components/form/date-picker';
 import TextArea from '../../input/TextArea';
-import Checkbox from '../../input/Checkbox';
-import { Status, User } from '@/constants/interfaces';
+import { User } from '@/constants/interfaces';
 import { useRouter } from 'next/navigation';
-import { deleteTask, getTask, updateTask } from '@/services/task';
+import { deleteTask, getTask, updateTask, updateTaskStatus } from '@/services/task';
 
 export default function EditTask() {
   const [title, setTitle] = useState("");
@@ -22,7 +21,6 @@ export default function EditTask() {
   const [dueDate, setDueDate] = useState("");
   const [description, setDescription] = useState("");
 
-  const [status, setSelectedStatus] = useState<Status | null>(null);
   const [options, setOptions] = useState<{ value: string; label: string }[]>([]);
 
   const { id } = useParams<{ id: string }>();
@@ -58,7 +56,6 @@ export default function EditTask() {
           setStartDate(response.startDate);
           setDueDate(response.dueDate);
           setDescription(response.description);
-          setSelectedStatus(response.status);
         }
       } catch (error) {
         console.error('Error fetching project details:', error);
@@ -73,7 +70,6 @@ export default function EditTask() {
       await updateTask(id, {
         title,
         userId,
-        status,
         startDate,
         dueDate,
         description,
@@ -88,6 +84,18 @@ export default function EditTask() {
     e.preventDefault();
     try {
       await deleteTask(id)
+      router.push("/admin/tasks-management");
+    } catch (error) {
+      console.error("Error creating project:", error);
+    }
+  };
+
+  const handleCancelTask = async (e: { preventDefault: () => void; }) => {
+    e.preventDefault();
+    try {
+      await updateTaskStatus(id, {
+        canceled: true,
+      })
       router.push("/admin/tasks-management");
     } catch (error) {
       console.error("Error creating project:", error);
@@ -151,30 +159,6 @@ export default function EditTask() {
         />
       </ComponentCard>
 
-      <ComponentCard title="Options">
-        <div className="flex items-center gap-4 flex-col items-start md:flex-row">
-          <Checkbox
-            checked={status === Status.NOT_STARTED}
-            onChange={() => setSelectedStatus(Status.NOT_STARTED)}
-            label="Not started"
-          />
-          <Checkbox
-            checked={status === Status.IN_PROGRESS}
-            onChange={() => setSelectedStatus(Status.IN_PROGRESS)}
-            label="In progress"
-          />
-          <Checkbox
-            checked={status === Status.COMPLETED}
-            onChange={() => setSelectedStatus(Status.COMPLETED)}
-            label="Completed"
-          />
-          <Checkbox
-            checked={status === Status.CANCELED}
-            onChange={() => setSelectedStatus(Status.CANCELED)}
-            label="Canceled"
-          />
-        </div>
-      </ComponentCard>
       <div className="flex gap-6 justify-center sm:justify-start">
         <Button
           type="submit"
@@ -190,6 +174,14 @@ export default function EditTask() {
           variant="error"
         >
           Delete
+        </Button>
+
+        <Button
+          onClick={handleCancelTask}
+          size="sm"
+          variant="error"
+        >
+          Drop Task
         </Button>
 
         <Button

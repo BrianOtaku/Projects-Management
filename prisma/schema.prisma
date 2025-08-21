@@ -18,6 +18,8 @@ enum Status {
   IN_PROGRESS
   COMPLETED
   CANCELED
+  PENDING
+  OVERDUE
 }
 
 model User {
@@ -42,29 +44,40 @@ model Team {
 }
 
 model Project {
-  id          BigInt   @id @default(autoincrement())
+  id          BigInt    @id @default(autoincrement())
   title       String
   description String
   status      Status
   startDate   DateTime
   dueDate     DateTime
-  progress    Float
-  teamId      BigInt?  @unique
-  team        Team?    @relation(fields: [teamId], references: [id])
-  tasks       Task[]
+  completeAt  DateTime?
+
+  progress Float
+
+  canceled Boolean @default(false)
+  submit   Boolean @default(false)
+  accept   Boolean @default(false)
+
+  teamId BigInt? @unique
+  team   Team?   @relation(fields: [teamId], references: [id])
+  tasks  Task[]
 }
 
 model Task {
-  id               BigInt    @id @default(autoincrement())
-  userId           BigInt
-  projectId        BigInt
-  title            String
-  description      String
-  status           Status
-  startDate        DateTime
-  dueDate          DateTime
-  reviewedByLeader Boolean   @default(false)
-  completeAt       DateTime?
-  user             User      @relation(fields: [userId], references: [id])
-  project          Project   @relation(fields: [projectId], references: [id])
+  id          BigInt    @id @default(autoincrement())
+  userId      BigInt
+  projectId   BigInt
+  title       String
+  description String
+  status      Status
+  startDate   DateTime
+  dueDate     DateTime
+  completeAt  DateTime?
+
+  canceled Boolean @default(false)
+  submit   Boolean @default(false)
+  accept   Boolean @default(false)
+
+  user    User    @relation(fields: [userId], references: [id])
+  project Project @relation(fields: [projectId], references: [id])
 }

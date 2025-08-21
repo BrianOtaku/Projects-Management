@@ -21,6 +21,11 @@ export async function updateTask(id: string | number, data: unknown) {
     return res.data;
 }
 
+export async function updateTaskStatus(id: string, data: { submit?: boolean; accept?: boolean; canceled?: boolean }) {
+    const res = await api.patch(`${API_ENDPOINTS.TASK}?id=${id}`, data);
+    return res.data;
+}
+
 export async function deleteTask(id: string | number) {
     const res = await api.delete(`${API_ENDPOINTS.TASK}?id=${id}`);
     return res.data;

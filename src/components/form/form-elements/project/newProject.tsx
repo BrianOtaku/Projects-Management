@@ -11,8 +11,6 @@ import DatePicker from '@/components/form/date-picker';
 import TextArea from '../../input/TextArea';
 import { createProject } from '@/services/project';
 import { getTeams } from '@/services/team';
-import Checkbox from '../../input/Checkbox';
-import { Status } from '@/constants/interfaces';
 import { useRouter } from 'next/navigation';
 
 export default function NewProject() {
@@ -22,7 +20,6 @@ export default function NewProject() {
   const [dueDate, setDueDate] = useState("");
   const [description, setDescription] = useState("");
 
-  const [status, setSelectedStatus] = useState<Status | null>(null);
   const [options, setOptions] = useState<{ value: string; label: string }[]>([]);
 
   const router = useRouter();
@@ -50,7 +47,6 @@ export default function NewProject() {
       await createProject({
         title,
         teamId,
-        status,
         startDate,
         dueDate,
         description,
@@ -113,31 +109,6 @@ export default function NewProject() {
           onChange={(value) => setDescription(value)}
           rows={6}
         />
-      </ComponentCard>
-
-      <ComponentCard title="Options">
-        <div className="flex items-center gap-4 flex-col items-start md:flex-row">
-          <Checkbox
-            checked={status === Status.NOT_STARTED}
-            onChange={() => setSelectedStatus(Status.NOT_STARTED)}
-            label="Not started"
-          />
-          <Checkbox
-            checked={status === Status.IN_PROGRESS}
-            onChange={() => setSelectedStatus(Status.IN_PROGRESS)}
-            label="In progress"
-          />
-          <Checkbox
-            checked={status === Status.COMPLETED}
-            onChange={() => setSelectedStatus(Status.COMPLETED)}
-            label="Completed"
-          />
-          <Checkbox
-            checked={status === Status.CANCELED}
-            onChange={() => setSelectedStatus(Status.CANCELED)}
-            label="Canceled"
-          />
-        </div>
       </ComponentCard>
 
       <div className="flex gap-6 justify-center sm:justify-start">

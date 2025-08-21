@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { normalizeData } from '@/lib/utils'
+import { setStatus, normalizeData } from '@/lib/utils'
 import { getCurrentUser } from '@/lib/utils'
 
 export async function GET() {
@@ -16,7 +16,20 @@ export async function GET() {
                 tasks: true,
             },
         })
-        return NextResponse.json(normalizeData(projects), { status: 200 })
+
+        const result = projects.map((project) => ({
+            ...project,
+            status: setStatus({
+                startDate: project.startDate,
+                dueDate: project.dueDate,
+                canceled: project.canceled,
+                submit: project.submit,
+                accept: project.accept,
+                completedAt: project.completeAt,
+            }),
+        }));
+
+        return NextResponse.json(normalizeData(result), { status: 200 })
     } catch (error) {
         console.error('[GET /api/project]', error)
         return NextResponse.json({ error: 'Lỗi server' }, { status: 500 })

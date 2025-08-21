@@ -43,19 +43,25 @@ const navItems: NavItem[] = [
     path: "/admin/projects-management",
   },
   {
-    name: "Your Projects",
+    name: "Assigned Projects",
     icon: <FolderIcon_2 />,
     path: "/admin/leader-projects",
     roles: ["LEADER"],
   },
   {
-    name: "Tasks",
+    name: "Created Tasks",
     icon: <TaskIcon />,
     path: "/admin/tasks-management",
     roles: ["LEADER"],
   },
   {
-    name: "Your Tasks",
+    name: "Pending Tasks",
+    icon: <TaskIcon />,
+    path: "/admin/pending-tasks",
+    roles: ["LEADER"],
+  },
+  {
+    name: "Assigned Tasks",
     icon: <TaskIcon />,
     path: "/admin/staff-tasks",
     roles: ["STAFF"],

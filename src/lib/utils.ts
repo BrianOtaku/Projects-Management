@@ -86,3 +86,36 @@ export function normalizeData(obj: unknown): unknown {
     // Trả về giá trị nguyên bản cho các kiểu khác (string, number, boolean, v.v.)
     return obj;
 }
+
+export function normalizeDeadline(date: Date): Date {
+    const d = new Date(date);
+    d.setHours(23, 59, 59, 999); // cuối ngày
+    return d;
+}
+
+export type Status = "NOT_STARTED" | "IN_PROGRESS" | "COMPLETED" | "CANCELED" | "PENDING" | "OVERDUE";
+
+export function setStatus(status: {
+    startDate: Date,
+    dueDate: Date,
+    canceled: boolean,
+    submit: boolean,
+    accept: boolean,
+    completedAt?: Date | null
+}): Status {
+    const now = new Date();
+
+    if (status.canceled) return "CANCELED";
+
+    if (status.submit && !status.accept) return "PENDING";
+
+    if (status.submit && status.accept) return "COMPLETED";
+
+    if (now < status.startDate) return "NOT_STARTED";
+
+    if (now > status.dueDate) return "OVERDUE";
+
+    if (now > status.dueDate && status.submit && status.accept) return "OVERDUE";
+
+    return "IN_PROGRESS";
+}

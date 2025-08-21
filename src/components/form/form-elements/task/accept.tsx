@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 import { updateTaskStatus } from '@/services/task';
 import FileInput from '../../input/FileInput';
 
-export default function Submit() {
+export default function Accept() {
 
   const { id } = useParams<{ id: string }>();
 
@@ -19,16 +19,28 @@ export default function Submit() {
     e.preventDefault();
     try {
       await updateTaskStatus(id, {
-        submit: true,
+        accept: true,
       });
-      router.push("/admin/staff-tasks");
+      router.push("/admin/pending-tasks");
+    } catch (error) {
+      console.error("Error creating project:", error);
+    }
+  };
+
+  const handleDisapprove = async (e: { preventDefault: () => void; }) => {
+    e.preventDefault();
+    try {
+      await updateTaskStatus(id, {
+        accept: false,
+      });
+      router.push("/admin/pending-tasks");
     } catch (error) {
       console.error("Error creating project:", error);
     }
   };
 
   const handleCancel = () => {
-    router.push("/admin/staff-tasks");
+    router.push("/admin/pending-tasks");
   };
 
   return (
@@ -46,7 +58,15 @@ export default function Submit() {
           size="sm"
           variant="primary"
         >
-          Submit
+          Approve
+        </Button>
+
+        <Button
+          onClick={handleDisapprove}
+          size="sm"
+          variant="error"
+        >
+          Disapprove
         </Button>
 
         <Button

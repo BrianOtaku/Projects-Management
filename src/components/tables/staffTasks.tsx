@@ -71,13 +71,10 @@ export default function StaffTasks() {
                   Description
                 </TableCell>
                 <TableCell isHeader className="px-4 py-3 font-medium text-gray-500 text-start text-base dark:text-gray-400">
-                  Assigned Staff
-                </TableCell>
-                <TableCell isHeader className="px-4 py-3 font-medium text-gray-500 text-start text-base dark:text-gray-400">
                   Status
                 </TableCell>
                 <TableCell isHeader className="px-4 py-3 font-medium text-gray-500 text-center text-base dark:text-gray-400">
-                  Submit
+                  {""}
                 </TableCell>
               </TableRow>
             </TableHeader>
@@ -87,7 +84,7 @@ export default function StaffTasks() {
 
                 return (
                   <TableRow key={task.id.toString()}>
-                    <TableCell className="px-5 py-4 sm:px-6 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                    <TableCell className="px-5 py-4 sm:px-6 font-medium text-gray-800 text-start text-theme-sm dark:text-white/90">
                       {task.title}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
@@ -96,25 +93,16 @@ export default function StaffTasks() {
                     <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                       {task.description}
                     </TableCell>
-                    <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                      <Badge
-                        size="sm"
-                        color="light"
-                      >
-                        {task.user?.name}
-                      </Badge>
-                    </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                       <Badge
                         size="sm"
                         color={
-                          task.status === "IN_PROGRESS"
-                            ? "warning"
-                            : task.status === "COMPLETED"
-                              ? "success"
-                              : task.status === "NOT_STARTED"
-                                ? "info"
-                                : "error"
+                          task.status === "IN_PROGRESS" ? "warning"
+                            : task.status === "COMPLETED" ? "success"
+                              : task.status === "NOT_STARTED" ? "info"
+                                : task.status === "PENDING" ? "pending"
+                                  : task.status === "OVERDUE" ? "overdue"
+                                    : "error"
                         }
                       >
                         {task.status}

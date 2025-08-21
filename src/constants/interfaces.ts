@@ -9,6 +9,8 @@ export enum Status {
     IN_PROGRESS = "IN_PROGRESS",
     COMPLETED = "COMPLETED",
     CANCELED = "CANCELED",
+    PENDING = "PENDING",
+    OVERDUE = "OVERDUE",
 }
 
 export interface User {
@@ -53,9 +55,13 @@ export interface Task {
     project?: Project;
     userId: number;
     user?: User;
+
     startDate: Date;
     dueDate: Date;
-    reviewedByLeader: boolean;
     completeAt?: Date;
+
+    submit: boolean;
+    accept: boolean;
+    canceled: boolean;
 }
 

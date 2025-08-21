@@ -12,8 +12,6 @@ import DatePicker from '@/components/form/date-picker';
 import TextArea from '../../input/TextArea';
 import { deleteProject, getProject, updateProject } from '@/services/project';
 import { getTeams } from '@/services/team';
-import Checkbox from '../../input/Checkbox';
-import { Status } from '@/constants/interfaces';
 import { useRouter } from 'next/navigation';
 
 export default function EditProject() {
@@ -23,7 +21,6 @@ export default function EditProject() {
   const [dueDate, setDueDate] = useState("");
   const [description, setDescription] = useState("");
 
-  const [status, setSelectedStatus] = useState<Status | null>(null);
   const [options, setOptions] = useState<{ value: string; label: string }[]>([]);
 
   const { id } = useParams<{ id: string }>();
@@ -57,7 +54,6 @@ export default function EditProject() {
           setStartDate(response.startDate);
           setDueDate(response.dueDate);
           setDescription(response.description);
-          setSelectedStatus(response.status);
         }
       } catch (error) {
         console.error('Error fetching project details:', error);
@@ -72,7 +68,6 @@ export default function EditProject() {
       await updateProject(id, {
         title,
         teamId,
-        status,
         startDate,
         dueDate,
         description,
@@ -150,30 +145,6 @@ export default function EditProject() {
         />
       </ComponentCard>
 
-      <ComponentCard title="Options">
-        <div className="flex items-center gap-4 flex-col items-start md:flex-row">
-          <Checkbox
-            checked={status === Status.NOT_STARTED}
-            onChange={() => setSelectedStatus(Status.NOT_STARTED)}
-            label="Not started"
-          />
-          <Checkbox
-            checked={status === Status.IN_PROGRESS}
-            onChange={() => setSelectedStatus(Status.IN_PROGRESS)}
-            label="In progress"
-          />
-          <Checkbox
-            checked={status === Status.COMPLETED}
-            onChange={() => setSelectedStatus(Status.COMPLETED)}
-            label="Completed"
-          />
-          <Checkbox
-            checked={status === Status.CANCELED}
-            onChange={() => setSelectedStatus(Status.CANCELED)}
-            label="Canceled"
-          />
-        </div>
-      </ComponentCard>
       <div className="flex gap-6 justify-center sm:justify-start">
         <Button
           type="submit"

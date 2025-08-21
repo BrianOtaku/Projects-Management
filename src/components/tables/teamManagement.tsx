@@ -70,7 +70,7 @@ export default function TeamManagement() {
                   Members
                 </TableCell>
                 <TableCell isHeader className="px-4 py-3 font-medium text-gray-500 text-center text-base dark:text-gray-400">
-                  Edit
+                  {""}
                 </TableCell>
               </TableRow>
             </TableHeader>

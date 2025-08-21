@@ -27,6 +27,7 @@ export default function TaskManagement() {
 
         const filterData = data.filter(
           (task: Task) => task.project?.team?.leaderId === user.id
+            && task.status !== "PENDING"
         );
 
         setTasks(filterData);
@@ -77,7 +78,7 @@ export default function TaskManagement() {
                   Status
                 </TableCell>
                 <TableCell isHeader className="px-4 py-3 font-medium text-gray-500 text-center text-base dark:text-gray-400">
-                  Edit
+                  {""}
                 </TableCell>
               </TableRow>
             </TableHeader>
@@ -87,7 +88,7 @@ export default function TaskManagement() {
 
                 return (
                   <TableRow key={task.id.toString()}>
-                    <TableCell className="px-5 py-4 sm:px-6 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                    <TableCell className="px-5 py-4 sm:px-6 font-medium text-gray-800 text-start text-theme-sm dark:text-white/90">
                       {task.title}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
@@ -108,13 +109,12 @@ export default function TaskManagement() {
                       <Badge
                         size="sm"
                         color={
-                          task.status === "IN_PROGRESS"
-                            ? "warning"
-                            : task.status === "COMPLETED"
-                              ? "success"
-                              : task.status === "NOT_STARTED"
-                                ? "info"
-                                : "error"
+                          task.status === "IN_PROGRESS" ? "warning"
+                            : task.status === "COMPLETED" ? "success"
+                              : task.status === "NOT_STARTED" ? "info"
+                                : task.status === "PENDING" ? "pending"
+                                  : task.status === "OVERDUE" ? "overdue"
+                                    : "error"
                         }
                       >
                         {task.status}
