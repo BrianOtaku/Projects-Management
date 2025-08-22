@@ -10,29 +10,31 @@ import {
 } from "../ui/table";
 import Badge from "../ui/badge/Badge";
 import Link from "next/link";
-import { Task } from "@/constants/interfaces";
-import { PencilIcon } from "@/icons";
-import { getTasks } from "@/services/task";
+import { getProjects } from "@/services/project";
+import { Project } from "@/constants/interfaces";
+import { PaperPlaneIcon, TaskIcon } from "@/icons";
 import { getMe } from "@/services/user";
 
-export default function TaskManagement() {
-  const [tasks, setTasks] = useState<Task[]>([]);
+export default function AssignedProjects() {
+  const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchData() {
       try {
+        const data = await getProjects();
         const user = await getMe();
-        const data = await getTasks();
 
         const filterData = data.filter(
-          (task: Task) => task.project?.team?.leaderId === user.id
-            && task.status !== "PENDING"
+          (project: Project) => project.team?.leaderId === user.id
+            && project.submit === false
+            && project.accept === false
+            && project.canceled === false
         );
 
-        setTasks(filterData);
+        setProjects(filterData);
       } catch (err) {
-        console.error("Lỗi khi load tasks:", err);
+        console.error("Lỗi khi load projects:", err);
       } finally {
         setLoading(false);
       }
@@ -63,16 +65,13 @@ export default function TaskManagement() {
             <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
               <TableRow>
                 <TableCell isHeader className="px-5 py-4 sm:px-6 font-medium text-gray-500 text-start text-base dark:text-gray-400 w-1/4">
-                  Task Name
-                </TableCell>
-                <TableCell isHeader className="px-4 py-3 font-medium text-gray-500 text-start text-base dark:text-gray-400">
                   Project Name
                 </TableCell>
                 <TableCell isHeader className="px-4 py-3 font-medium text-gray-500 text-start text-base dark:text-gray-400">
-                  Description
+                  Assigned Team
                 </TableCell>
                 <TableCell isHeader className="px-4 py-3 font-medium text-gray-500 text-start text-base dark:text-gray-400">
-                  Assigned Staff
+                  Description
                 </TableCell>
                 <TableCell isHeader className="px-4 py-3 font-medium text-gray-500 text-start text-base dark:text-gray-400">
                   Status
@@ -84,50 +83,49 @@ export default function TaskManagement() {
             </TableHeader>
 
             <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-              {tasks.map((task) => {
+              {projects.map((project) => {
 
                 return (
-                  <TableRow key={task.id.toString()}>
+                  <TableRow key={project.id.toString()}>
                     <TableCell className="px-5 py-4 sm:px-6 font-medium text-gray-800 text-start text-theme-sm dark:text-white/90">
-                      {task.title}
+                      {project.title}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                      <Badge
-                        size="sm"
-                        color="primary"
-                      >
-                        {task.project?.title}
-                      </Badge>
+                      {project.team?.teamName ? (
+                        <Badge
+                          size="sm"
+                          color="primary"
+                        >
+                          {project.team?.teamName}
+                        </Badge>
+                      ) : (
+                        <span className="text-sm text-gray-400">No Team Assigned</span>
+                      )}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                      {task.description}
-                    </TableCell>
-                    <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                      <Badge
-                        size="sm"
-                        color="light"
-                      >
-                        {task.user?.name}
-                      </Badge>
+                      {project.description}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                       <Badge
                         size="sm"
                         color={
-                          task.status === "IN_PROGRESS" ? "warning"
-                            : task.status === "COMPLETED" ? "success"
-                              : task.status === "NOT_STARTED" ? "info"
-                                : task.status === "PENDING" ? "pending"
-                                  : task.status === "OVERDUE" ? "overdue"
+                          project.status === "IN_PROGRESS" ? "warning"
+                            : project.status === "COMPLETED" ? "success"
+                              : project.status === "NOT_STARTED" ? "info"
+                                : project.status === "PENDING" ? "pending"
+                                  : project.status === "OVERDUE" ? "overdue"
                                     : "error"
                         }
                       >
-                        {task.status}
+                        {project.status}
                       </Badge>
                     </TableCell>
-                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                      <Link href={`task/edit-task/${task.id}`} title="Edit Task" className="flex justify-center">
-                        <PencilIcon className="fill-current hover:text-gray-800 dark:hover:text-white/90" />
+                    <TableCell className="flex gap-3 justify-center px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                      <Link href={`task/new-task/${project.id}`} title="New Task">
+                        <TaskIcon className="fill-current hover:text-gray-800 dark:hover:text-white/90" />
+                      </Link>
+                      <Link href={`project/submit/${project.id}`} title="Submit">
+                        <PaperPlaneIcon className="fill-current hover:text-gray-800 dark:hover:text-white/90" />
                       </Link>
                     </TableCell>
                   </TableRow>

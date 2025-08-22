@@ -21,6 +21,11 @@ export async function updateProject(id: string | number, data: unknown) {
     return res.data;
 }
 
+export async function updateProjectStatus(id: string, data: { submit?: boolean; accept?: boolean; canceled?: boolean }) {
+    const res = await api.patch(`${API_ENDPOINTS.PROJECT}?id=${id}`, data);
+    return res.data;
+}
+
 export async function deleteProject(id: string | number) {
     const res = await api.delete(`${API_ENDPOINTS.PROJECT}?id=${id}`);
     return res.data;

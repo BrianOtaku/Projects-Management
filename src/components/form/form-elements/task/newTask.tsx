@@ -57,14 +57,14 @@ export default function NewTask() {
         dueDate,
         description,
       });
-      router.push("/admin/leader-projects");
+      router.push("/admin/assigned-projects");
     } catch (error) {
       console.error("Error creating project:", error);
     }
   };
 
   const handleCancel = () => {
-    router.push("/admin/leader-projects");
+    router.push("/admin/assigned-projects");
   }
 
   return (

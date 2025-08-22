@@ -109,13 +109,11 @@ export function setStatus(status: {
 
     if (status.submit && !status.accept) return "PENDING";
 
-    if (status.submit && status.accept) return "COMPLETED";
+    if (now > status.dueDate && status.submit && status.accept) {
+        return "OVERDUE"
+    } else if (status.submit && status.accept) return "COMPLETED";
 
     if (now < status.startDate) return "NOT_STARTED";
-
-    if (now > status.dueDate) return "OVERDUE";
-
-    if (now > status.dueDate && status.submit && status.accept) return "OVERDUE";
 
     return "IN_PROGRESS";
 }

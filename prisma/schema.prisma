@@ -35,12 +35,12 @@ model User {
 }
 
 model Team {
-  id       BigInt   @id @default(autoincrement())
+  id       BigInt    @id @default(autoincrement())
   teamName String
-  project  Project?
+  project  Project[]
   members  User[]
   leaderId BigInt?
-  leader   User?    @relation("TeamLeader", fields: [leaderId], references: [id])
+  leader   User?     @relation("TeamLeader", fields: [leaderId], references: [id])
 }
 
 model Project {
@@ -52,13 +52,11 @@ model Project {
   dueDate     DateTime
   completeAt  DateTime?
 
-  progress Float
-
   canceled Boolean @default(false)
   submit   Boolean @default(false)
   accept   Boolean @default(false)
 
-  teamId BigInt? @unique
+  teamId BigInt? 
   team   Team?   @relation(fields: [teamId], references: [id])
   tasks  Task[]
 }

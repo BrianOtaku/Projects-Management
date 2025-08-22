@@ -22,7 +22,9 @@ export default function ProjectManagement() {
     async function fetchData() {
       try {
         const data = await getProjects();
-        setProjects(data);
+        const filterData = data.filter((project: Project) => project.status !== "PENDING");
+
+        setProjects(filterData);
       } catch (err) {
         console.error("Lỗi khi load projects:", err);
       } finally {
@@ -56,7 +58,7 @@ export default function ProjectManagement() {
         </div>
       </div>
 
-      <div className="max-w-full overflow-x-auto">
+      <div className="max-w-full overflow-x-auto custom-scrollbar">
         <div className="min-w-[1102px]">
           <Table>
             <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
@@ -72,9 +74,6 @@ export default function ProjectManagement() {
                 </TableCell>
                 <TableCell isHeader className="px-4 py-3 font-medium text-gray-500 text-start text-base dark:text-gray-400">
                   Status
-                </TableCell>
-                <TableCell isHeader className="px-4 py-3 font-medium text-gray-500 text-start text-base dark:text-gray-400">
-                  Progress
                 </TableCell>
                 <TableCell isHeader className="px-4 py-3 font-medium text-gray-500 text-center text-base dark:text-gray-400">
                   {""}
@@ -109,20 +108,16 @@ export default function ProjectManagement() {
                       <Badge
                         size="sm"
                         color={
-                          project.status === "IN_PROGRESS"
-                            ? "warning"
-                            : project.status === "COMPLETED"
-                              ? "success"
-                              : project.status === "NOT_STARTED"
-                                ? "info"
-                                : "error"
+                          project.status === "IN_PROGRESS" ? "warning"
+                            : project.status === "COMPLETED" ? "success"
+                              : project.status === "NOT_STARTED" ? "info"
+                                : project.status === "PENDING" ? "pending"
+                                  : project.status === "OVERDUE" ? "overdue"
+                                    : "error"
                         }
                       >
                         {project.status}
                       </Badge>
-                    </TableCell>
-                    <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                      {project.progress}%
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                       <Link href={`project/edit-project/${project.id}`} title="Edit Project" className="flex justify-center">

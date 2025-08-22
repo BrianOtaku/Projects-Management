@@ -36,40 +36,25 @@ const navItems: NavItem[] = [
     icon: <GridIcon />,
     name: "Dashboard",
     path: "/admin",
+    roles: ["MANAGER"]
   },
   {
     name: "Projects",
     icon: <FolderIcon_2 />,
     path: "/admin/projects-management",
+    roles: ["MANAGER"]
   },
   {
-    name: "Assigned Projects",
+    name: "Pending Projects",
     icon: <FolderIcon_2 />,
-    path: "/admin/leader-projects",
-    roles: ["LEADER"],
-  },
-  {
-    name: "Created Tasks",
-    icon: <TaskIcon />,
-    path: "/admin/tasks-management",
-    roles: ["LEADER"],
-  },
-  {
-    name: "Pending Tasks",
-    icon: <TaskIcon />,
-    path: "/admin/pending-tasks",
-    roles: ["LEADER"],
-  },
-  {
-    name: "Assigned Tasks",
-    icon: <TaskIcon />,
-    path: "/admin/staff-tasks",
-    roles: ["STAFF"],
+    path: "/admin/pending-projects",
+    roles: ["MANAGER"]
   },
   {
     name: "Teams",
     icon: <GroupIcon />,
     path: "/admin/teams-management",
+    roles: ["MANAGER"]
   },
   {
     icon: (
@@ -93,6 +78,7 @@ const navItems: NavItem[] = [
     ),
     name: "Leaders",
     path: "/admin/leaders-management",
+    roles: ["MANAGER"]
   },
   {
     icon: (
@@ -115,10 +101,53 @@ const navItems: NavItem[] = [
     ),
     name: "Staffs",
     path: "/admin/staffs-management",
+    roles: ["MANAGER"]
+  },
+  {
+    name: "Assigned Projects",
+    icon: <FolderIcon_2 />,
+    path: "/admin/assigned-projects",
+    roles: ["LEADER"],
+  },
+  {
+    name: "Completed Projects",
+    icon: <FolderIcon_2 />,
+    path: "/admin/completed-projects",
+    roles: ["LEADER"],
+  },
+  {
+    name: "Tasks",
+    icon: <TaskIcon />,
+    path: "/admin/tasks-management",
+    roles: ["LEADER"],
+  },
+  {
+    name: "Pending Tasks",
+    icon: <TaskIcon />,
+    path: "/admin/pending-tasks",
+    roles: ["LEADER"],
+  },
+  {
+    name: "Assigned Tasks",
+    icon: <TaskIcon />,
+    path: "/admin/assigned-tasks",
+    roles: ["STAFF"],
+  },
+  {
+    name: "Completed Tasks",
+    icon: <TaskIcon />,
+    path: "/admin/completed-tasks",
+    roles: ["STAFF"],
   },
 ];
 
 const othersItems: NavItem[] = [
+  {
+    icon: <GroupIcon />,
+    name: "Your Team",
+    path: "/admin/your-team",
+    roles: ["LEADER", "STAFF"]
+  },
   {
     icon: <CalenderIcon />,
     name: "Calendar",

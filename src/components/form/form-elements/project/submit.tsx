@@ -6,7 +6,7 @@ import ComponentCard from '../../../common/ComponentCard';
 import Label from '../../Label';
 import Button from '@/components/ui/button/Button';
 import { useRouter } from 'next/navigation';
-import { updateTaskStatus } from '@/services/task';
+import { updateProjectStatus } from '@/services/project';
 import FileInput from '../../input/FileInput';
 
 export default function Submit() {
@@ -18,17 +18,17 @@ export default function Submit() {
   const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     try {
-      await updateTaskStatus(id, {
+      await updateProjectStatus(id, {
         submit: true,
       });
-      router.push("/admin/assigned-tasks");
+      router.push("/admin/assigned-projects");
     } catch (error) {
       console.error("Error creating project:", error);
     }
   };
 
   const handleCancel = () => {
-    router.push("/admin/assigned-tasks");
+    router.push("/admin/assigned-projects");
   };
 
   return (

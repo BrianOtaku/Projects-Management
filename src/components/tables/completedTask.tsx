@@ -9,13 +9,11 @@ import {
   TableRow,
 } from "../ui/table";
 import Badge from "../ui/badge/Badge";
-import Link from "next/link";
 import { Task } from "@/constants/interfaces";
-import { PencilIcon } from "@/icons";
 import { getTasks } from "@/services/task";
 import { getMe } from "@/services/user";
 
-export default function TaskManagement() {
+export default function CompletedTasks() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -26,8 +24,9 @@ export default function TaskManagement() {
         const data = await getTasks();
 
         const filterData = data.filter(
-          (task: Task) => task.project?.team?.leaderId === user.id
-            && task.status !== "PENDING"
+          (task: Task) => task.userId === user.id
+            && task.submit === true
+            && task.accept === true
         );
 
         setTasks(filterData);
@@ -72,13 +71,7 @@ export default function TaskManagement() {
                   Description
                 </TableCell>
                 <TableCell isHeader className="px-4 py-3 font-medium text-gray-500 text-start text-base dark:text-gray-400">
-                  Assigned Staff
-                </TableCell>
-                <TableCell isHeader className="px-4 py-3 font-medium text-gray-500 text-start text-base dark:text-gray-400">
                   Status
-                </TableCell>
-                <TableCell isHeader className="px-4 py-3 font-medium text-gray-500 text-center text-base dark:text-gray-400">
-                  {""}
                 </TableCell>
               </TableRow>
             </TableHeader>
@@ -102,14 +95,6 @@ export default function TaskManagement() {
                     <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                       {task.description}
                     </TableCell>
-                    <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                      <Badge
-                        size="sm"
-                        color="light"
-                      >
-                        {task.user?.name}
-                      </Badge>
-                    </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                       <Badge
                         size="sm"
@@ -124,11 +109,6 @@ export default function TaskManagement() {
                       >
                         {task.status}
                       </Badge>
-                    </TableCell>
-                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                      <Link href={`task/edit-task/${task.id}`} title="Edit Task" className="flex justify-center">
-                        <PencilIcon className="fill-current hover:text-gray-800 dark:hover:text-white/90" />
-                      </Link>
                     </TableCell>
                   </TableRow>
                 );

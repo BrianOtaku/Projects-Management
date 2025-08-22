@@ -56,11 +56,24 @@ export async function POST(req: Request) {
         );
     }
 
+    const now = new Date();
+    const startDate = new Date(data.startDate);
+    const dueDate = new Date(data.dueDate);
+    if (now < project.startDate) {
+        return NextResponse.json({ message: "Project is not started" }, { status: 400 })
+    } else if (now > project.startDate) {
+        await prisma.project.update({
+            where: { id: BigInt(data.projectId) },
+            data: { status: "IN_PROGRESS" },
+        });
+    }
+
+    if (startDate > dueDate || dueDate < now) {
+        return NextResponse.json({ error: 'You fucking idiot!' }, { status: 400 });
+    }
+
     if (project.team?.leaderId?.toString() !== user.id.toString()) {
-        return NextResponse.json(
-            { message: "You are not the leader of this project" },
-            { status: 403 }
-        );
+        return NextResponse.json({ message: "You are not the leader of this project" }, { status: 403 });
     }
 
     const status = setStatus({
@@ -100,6 +113,9 @@ export async function PUT(req: NextRequest) {
         if (!currentTask) {
             return NextResponse.json({ message: "Task không tồn tại" }, { status: 404 });
         }
+        if (currentTask.status === "OVERDUE" || currentTask.status === "COMPLETED" || currentTask.status === "CANCELED") {
+            return NextResponse.json({ message: "Task đã hoàn thành hoặc bị hủy" }, { status: 400 });
+        }
 
         if (!id) {
             return NextResponse.json({ message: 'Thiếu id' }, { status: 400 });
@@ -116,6 +132,14 @@ export async function PUT(req: NextRequest) {
 
         if (!id) {
             return NextResponse.json({ error: 'Thiếu ID' }, { status: 400 })
+        }
+
+        const now = new Date()
+        if (startDate > dueDate || dueDate < now) {
+            return NextResponse.json(
+                { error: 'You fucking idiot!' },
+                { status: 400 }
+            );
         }
 
         const status = setStatus({
@@ -165,20 +189,45 @@ export async function PATCH(req: NextRequest) {
         }
 
         const body = await req.json();
+        const now = new Date();
+        let isInProgress = false;
+        if (now < currentTask.startDate) {
+            return NextResponse.json({ message: "Task is not started" }, { status: 400 })
+        } else if (now > currentTask.startDate) {
+            await prisma.task.update({
+                where: { id: BigInt(currentTask.id) },
+                data: { status: "IN_PROGRESS" },
+            });
+            isInProgress = true;
+        }
 
         let updateData = {};
 
         if (user.role === "STAFF") {
-            if (body.submit === true) {
-                if (currentTask.status !== "IN_PROGRESS") {
-                    return NextResponse.json({ message: "Chỉ có thể submit khi task đang IN_PROGRESS" }, { status: 403 });
-                }
-
-                updateData = { submit: true, status: "PENDING" };
-            } else {
-                return NextResponse.json({ message: "Staff chỉ có thể submit" }, { status: 403 });
+            if (body.submit !== true) {
+                return NextResponse.json(
+                    { message: "Staff chỉ có thể submit task" },
+                    { status: 403 }
+                );
             }
+
+            if (!isInProgress) {
+                return NextResponse.json(
+                    { message: "Chỉ có thể submit khi task đang IN_PROGRESS" },
+                    { status: 403 }
+                );
+            }
+
+            if (currentTask.submit === true) {
+                return NextResponse.json(
+                    { message: "Task đã được submit, không thể submit lại" },
+                    { status: 403 }
+                );
+            }
+
+            updateData = { submit: true, status: "PENDING" };
         }
+
         if (user.role === "LEADER") {
             const now = new Date();
 

@@ -7,5 +7,16 @@ export default async function Page() {
     if (!user) {
         redirect("/signin");
     }
-    redirect("/admin");
+
+    if (user.role === "LEADER") {
+        redirect("/admin/assigned-projects")
+    }
+
+    if (user.role === "STAFF") {
+        redirect("/admin/assigned-tasks")
+    }
+
+    if (user.role === "MANAGER") {
+        redirect("/admin")
+    }
 }

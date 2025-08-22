@@ -1,6 +1,6 @@
 "use client";
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
-import PendingTasks from "@/components/tables/pendingTask";
+import AssignedTasks from "@/components/tables/assignedTask";
 import { PaperPlaneIcon } from "@/icons";
 import React, { useEffect, useRef } from "react";
 
@@ -25,7 +25,7 @@ export const ProjectsDetail: React.FC = () => {
 
   return (
     <div>
-      <PageBreadcrumb pageTitle="Pending Tasks" />
+      <PageBreadcrumb pageTitle="Assigned Tasks" />
       <div className="md:flex items-center justify-normal mb-4 md:mb-6">
 
         <form className="">
@@ -61,7 +61,7 @@ export const ProjectsDetail: React.FC = () => {
         </form>
       </div>
       <div className="space-y-6">
-        <PendingTasks />
+        <AssignedTasks />
       </div>
     </div>
   );

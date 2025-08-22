@@ -90,7 +90,7 @@ export default function EditTask() {
     }
   };
 
-  const handleCancelTask = async (e: { preventDefault: () => void; }) => {
+  const handleDrop = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     try {
       await updateTaskStatus(id, {
@@ -177,7 +177,7 @@ export default function EditTask() {
         </Button>
 
         <Button
-          onClick={handleCancelTask}
+          onClick={handleDrop}
           size="sm"
           variant="error"
         >

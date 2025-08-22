@@ -10,7 +10,7 @@ import Button from '@/components/ui/button/Button';
 import { ChevronDownIcon } from '../../../../icons';
 import DatePicker from '@/components/form/date-picker';
 import TextArea from '../../input/TextArea';
-import { deleteProject, getProject, updateProject } from '@/services/project';
+import { deleteProject, getProject, updateProject, updateProjectStatus } from '@/services/project';
 import { getTeams } from '@/services/team';
 import { useRouter } from 'next/navigation';
 
@@ -42,7 +42,7 @@ export default function EditProject() {
     };
 
     fetchTeams();
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     const fetchProjectDetails = async () => {
@@ -82,6 +82,18 @@ export default function EditProject() {
     e.preventDefault();
     try {
       await deleteProject(id)
+      router.push("/admin/projects-management");
+    } catch (error) {
+      console.error("Error creating project:", error);
+    }
+  };
+
+  const handleDrop = async (e: { preventDefault: () => void; }) => {
+    e.preventDefault();
+    try {
+      await updateProjectStatus(id, {
+        canceled: true,
+      })
       router.push("/admin/projects-management");
     } catch (error) {
       console.error("Error creating project:", error);
@@ -160,6 +172,14 @@ export default function EditProject() {
           variant="error"
         >
           Delete
+        </Button>
+
+        <Button
+          onClick={handleDrop}
+          size="sm"
+          variant="error"
+        >
+          Drop Project
         </Button>
 
         <Button

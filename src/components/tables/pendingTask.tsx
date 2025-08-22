@@ -57,7 +57,7 @@ export default function PendingTasks() {
         </div>
       </div>
 
-      <div className="max-w-full overflow-x-auto">
+      <div className="max-w-full overflow-x-auto custom-scrollbar">
         <div className="min-w-[1102px]">
           <Table>
             <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
@@ -92,7 +92,12 @@ export default function PendingTasks() {
                       {task.title}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                      {task.project?.title || "N/A"}
+                      <Badge
+                        size="sm"
+                        color="primary"
+                      >
+                        {task.project?.title}
+                      </Badge>
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                       {task.description}

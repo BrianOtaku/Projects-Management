@@ -38,12 +38,17 @@ export interface Project {
     title: string;
     description: string;
     status: Status;
-    startDate: Date;
-    dueDate: Date;
-    progress: number;
     teamId?: number;
     team?: Team;
     tasks?: Task[];
+
+    startDate: Date;
+    dueDate: Date;
+    completeAt?: Date;
+
+    submit: boolean;
+    accept: boolean;
+    canceled: boolean;
 }
 
 export interface Task {

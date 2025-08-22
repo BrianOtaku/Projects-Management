@@ -6,10 +6,10 @@ import ComponentCard from '../../../common/ComponentCard';
 import Label from '../../Label';
 import Button from '@/components/ui/button/Button';
 import { useRouter } from 'next/navigation';
-import { updateTaskStatus } from '@/services/task';
+import { updateProjectStatus } from '@/services/project';
 import FileInput from '../../input/FileInput';
 
-export default function Submit() {
+export default function Accept() {
 
   const { id } = useParams<{ id: string }>();
 
@@ -18,17 +18,29 @@ export default function Submit() {
   const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     try {
-      await updateTaskStatus(id, {
-        submit: true,
+      await updateProjectStatus(id, {
+        accept: true,
       });
-      router.push("/admin/assigned-tasks");
+      router.push("/admin/pending-projects");
+    } catch (error) {
+      console.error("Error creating project:", error);
+    }
+  };
+
+  const handleDisapprove = async (e: { preventDefault: () => void; }) => {
+    e.preventDefault();
+    try {
+      await updateProjectStatus(id, {
+        accept: false,
+      });
+      router.push("/admin/pending-projects");
     } catch (error) {
       console.error("Error creating project:", error);
     }
   };
 
   const handleCancel = () => {
-    router.push("/admin/assigned-tasks");
+    router.push("/admin/pending-projects");
   };
 
   return (
@@ -46,7 +58,15 @@ export default function Submit() {
           size="sm"
           variant="primary"
         >
-          Submit
+          Approve
+        </Button>
+
+        <Button
+          onClick={handleDisapprove}
+          size="sm"
+          variant="error"
+        >
+          Disapprove
         </Button>
 
         <Button
