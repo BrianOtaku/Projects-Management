@@ -22,22 +22,22 @@ export async function createUser(data: unknown) {
 }
 
 export async function updateUser(id: string | number, data: unknown) {
-    const res = await api.put(`${API_ENDPOINTS.USER}?id=${id}`, data);
+    const res = await api.put(`${API_ENDPOINTS.USER}/${id}`, data);
     return res.data;
 }
 
 export async function updateMe(id: string | number, data: unknown) {
-    const res = await api.put(`${API_ENDPOINTS.USER_ID}?id=${id}`, data);
+    const res = await api.put(`${API_ENDPOINTS.USER_ID}/${id}`, data);
     return res.data;
 }
 
 export async function deleteUser(id: string | number) {
-    const res = await api.delete(`${API_ENDPOINTS.USER}?id=${id}`);
+    const res = await api.delete(`${API_ENDPOINTS.USER}/${id}`);
     return res.data;
 }
 
 export async function deleteMe(id: string | number) {
-    const res = await api.delete(`${API_ENDPOINTS.USER_ID}?id=${id}`);
+    const res = await api.delete(`${API_ENDPOINTS.USER_ID}/${id}`);
     return res.data;
 }
 
