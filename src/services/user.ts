@@ -7,7 +7,7 @@ export async function getUsers() {
 }
 
 export async function getUser(id: string | number) {
-    const res = await api.get(`${API_ENDPOINTS.USER_ID}?id=${id}`);
+    const res = await api.get(`${API_ENDPOINTS.USER_ID}/${id}`);
     return res.data;
 }
 
