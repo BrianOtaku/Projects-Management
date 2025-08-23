@@ -42,12 +42,10 @@ export default function EditProject() {
     };
 
     fetchTeams();
-  }, [id]);
+  }, []);
 
   useEffect(() => {
     const fetchProjectDetails = async () => {
-      if (!id) return;
-
       try {
         const response = await getProject(id);
         if (response) {
