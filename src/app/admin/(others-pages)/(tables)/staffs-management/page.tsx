@@ -5,7 +5,7 @@ import StaffManagement from "@/components/user-profile/staffManagement";
 import { PaperPlaneIcon } from "@/icons";
 import React, { useEffect, useRef } from "react";
 
-export default function Profile() {
+export default function StaffPage() {
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {

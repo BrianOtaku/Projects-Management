@@ -4,7 +4,7 @@ import AssignedProjects from "@/components/tables/assignedProject";
 import { PaperPlaneIcon } from "@/icons";
 import React, { useEffect, useRef } from "react";
 
-export const ProjectsDetail: React.FC = () => {
+export default function AssignedProjectsPage() {
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -66,5 +66,3 @@ export const ProjectsDetail: React.FC = () => {
     </div>
   );
 }
-
-export default ProjectsDetail;

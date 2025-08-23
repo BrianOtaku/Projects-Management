@@ -4,7 +4,7 @@ import MonthlySalesChart from "@/components/ecommerce/MonthlySalesChart";
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import ProjectManagement from "@/components/tables/projectManagement";
 
-export default function Ecommerce() {
+export default function Dashboard() {
   return (
     <div>
       <PageBreadcrumb pageTitle="Dashboard" />
