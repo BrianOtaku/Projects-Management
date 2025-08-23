@@ -2,7 +2,7 @@
 CREATE TYPE "public"."Role" AS ENUM ('MANAGER', 'LEADER', 'STAFF');
 
 -- CreateEnum
-CREATE TYPE "public"."Status" AS ENUM ('NOT_STARTED', 'IN_PROGRESS', 'COMPLETED', 'CANCELED');
+CREATE TYPE "public"."Status" AS ENUM ('NOT_STARTED', 'IN_PROGRESS', 'COMPLETED', 'CANCELED', 'PENDING', 'OVERDUE');
 
 -- CreateTable
 CREATE TABLE "public"."User" (
@@ -20,7 +20,7 @@ CREATE TABLE "public"."User" (
 CREATE TABLE "public"."Team" (
     "id" BIGSERIAL NOT NULL,
     "teamName" TEXT NOT NULL,
-    "leaderId" BIGINT NOT NULL,
+    "leaderId" BIGINT,
 
     CONSTRAINT "Team_pkey" PRIMARY KEY ("id")
 );
@@ -33,7 +33,10 @@ CREATE TABLE "public"."Project" (
     "status" "public"."Status" NOT NULL,
     "startDate" TIMESTAMP(3) NOT NULL,
     "dueDate" TIMESTAMP(3) NOT NULL,
-    "progress" DOUBLE PRECISION NOT NULL,
+    "completeAt" TIMESTAMP(3),
+    "canceled" BOOLEAN NOT NULL DEFAULT false,
+    "submit" BOOLEAN NOT NULL DEFAULT false,
+    "accept" BOOLEAN NOT NULL DEFAULT false,
     "teamId" BIGINT,
 
     CONSTRAINT "Project_pkey" PRIMARY KEY ("id")
@@ -49,8 +52,10 @@ CREATE TABLE "public"."Task" (
     "status" "public"."Status" NOT NULL,
     "startDate" TIMESTAMP(3) NOT NULL,
     "dueDate" TIMESTAMP(3) NOT NULL,
-    "reviewedByLeader" BOOLEAN NOT NULL DEFAULT false,
     "completeAt" TIMESTAMP(3),
+    "canceled" BOOLEAN NOT NULL DEFAULT false,
+    "submit" BOOLEAN NOT NULL DEFAULT false,
+    "accept" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "Task_pkey" PRIMARY KEY ("id")
 );
@@ -58,14 +63,11 @@ CREATE TABLE "public"."Task" (
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "public"."User"("email");
 
--- CreateIndex
-CREATE UNIQUE INDEX "Project_teamId_key" ON "public"."Project"("teamId");
-
 -- AddForeignKey
 ALTER TABLE "public"."User" ADD CONSTRAINT "User_teamId_fkey" FOREIGN KEY ("teamId") REFERENCES "public"."Team"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."Team" ADD CONSTRAINT "Team_leaderId_fkey" FOREIGN KEY ("leaderId") REFERENCES "public"."User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "public"."Team" ADD CONSTRAINT "Team_leaderId_fkey" FOREIGN KEY ("leaderId") REFERENCES "public"."User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "public"."Project" ADD CONSTRAINT "Project_teamId_fkey" FOREIGN KEY ("teamId") REFERENCES "public"."Team"("id") ON DELETE SET NULL ON UPDATE CASCADE;

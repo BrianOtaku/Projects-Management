@@ -1,18 +1,18 @@
   {
     "name": "manager",
-    "email": "manager@example.com",
+    "email": "manager@gmail.com",
     "password": "manager",
     "role": "MANAGER"
   }
   {
     "name": "leader",
-    "email": "leader@example.com",
+    "email": "leader@gmail.com",
     "password": "leader",
     "role": "LEADER"
   }
   {
     "name": "staff",
-    "email": "staff@example.com",
+    "email": "staff@gmail.com",
     "password": "staff",
     "role": "STAFF"
   }

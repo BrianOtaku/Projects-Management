@@ -46,6 +46,8 @@ export default function EditProject() {
 
   useEffect(() => {
     const fetchProjectDetails = async () => {
+      if (!id) return;
+
       try {
         const response = await getProject(id);
         if (response) {

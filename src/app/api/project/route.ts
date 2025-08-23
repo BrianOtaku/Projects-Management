@@ -42,7 +42,7 @@ export async function POST(req: Request) {
         const now = new Date()
         const startDate = new Date(body.startDate);
         const dueDate = new Date(body.dueDate);
-        if (startDate > dueDate || dueDate < now) {
+        if (startDate > normalizeDeadline(dueDate) || normalizeDeadline(dueDate) < now) {
             return NextResponse.json(
                 { error: 'You fucking idiot!' },
                 { status: 400 }
@@ -119,7 +119,7 @@ export async function PUT(req: NextRequest) {
         const now = new Date()
         const startDate = new Date(body.startDate);
         const dueDate = new Date(body.dueDate);
-        if (startDate > dueDate || dueDate < now) {
+        if (startDate > normalizeDeadline(dueDate) || normalizeDeadline(dueDate) < now) {
             return NextResponse.json(
                 { error: 'You fucking idiot!' },
                 { status: 400 }

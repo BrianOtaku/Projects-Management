@@ -68,7 +68,7 @@ export async function POST(req: Request) {
         });
     }
 
-    if (startDate > dueDate || dueDate < now) {
+    if (startDate > normalizeDeadline(dueDate) || normalizeDeadline(dueDate) < now) {
         return NextResponse.json({ error: 'You fucking idiot!' }, { status: 400 });
     }
 
@@ -125,8 +125,6 @@ export async function PUT(req: NextRequest) {
         const {
             title,
             description,
-            startDate,
-            dueDate,
             userId,
         } = body
 
@@ -134,8 +132,10 @@ export async function PUT(req: NextRequest) {
             return NextResponse.json({ error: 'Thiếu ID' }, { status: 400 })
         }
 
-        const now = new Date()
-        if (startDate > dueDate || dueDate < now) {
+        const now = new Date();
+        const startDate = new Date(body.startDate);
+        const dueDate = new Date(body.dueDate);
+        if (startDate > normalizeDeadline(dueDate) || normalizeDeadline(dueDate) < now) {
             return NextResponse.json(
                 { error: 'You fucking idiot!' },
                 { status: 400 }
