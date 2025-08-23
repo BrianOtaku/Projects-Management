@@ -7,7 +7,7 @@ export async function getProjects() {
 }
 
 export async function getProject(id: string | number) {
-    const res = await api.get(`${API_ENDPOINTS.PROJECT}/${id}`);
+    const res = await api.get(`${API_ENDPOINTS.PROJECT_ID}/${id}`);
     return res.data;
 }
 
