@@ -2,9 +2,10 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { normalizeData } from '@/lib/utils'
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest) {
     try {
-        const { id } = params;
+        const pathParts = req.nextUrl.pathname.split("/");
+        const id = pathParts[pathParts.length - 1];
         if (!id) {
             return NextResponse.json({ message: "Thiếu id dự án" }, { status: 400 });
         }
