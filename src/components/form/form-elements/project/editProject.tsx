@@ -54,7 +54,6 @@ export default function EditProject() {
           setStartDate(response.startDate);
           setDueDate(response.dueDate);
           setDescription(response.description);
-          console.log(response)
         }
       } catch (error) {
         console.error('Error fetching project details:', error);
