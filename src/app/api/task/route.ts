@@ -61,11 +61,6 @@ export async function POST(req: Request) {
     const dueDate = new Date(data.dueDate);
     if (now < project.startDate) {
         return NextResponse.json({ message: "Project is not started" }, { status: 400 })
-    } else if (now > project.startDate) {
-        await prisma.project.update({
-            where: { id: BigInt(data.projectId) },
-            data: { status: "IN_PROGRESS" },
-        });
     }
 
     if (startDate > normalizeDeadline(dueDate) || normalizeDeadline(dueDate) < now) {
@@ -190,15 +185,8 @@ export async function PATCH(req: NextRequest) {
 
         const body = await req.json();
         const now = new Date();
-        let isInProgress = false;
         if (now < currentTask.startDate) {
             return NextResponse.json({ message: "Task is not started" }, { status: 400 })
-        } else if (now > currentTask.startDate) {
-            await prisma.task.update({
-                where: { id: BigInt(currentTask.id) },
-                data: { status: "IN_PROGRESS" },
-            });
-            isInProgress = true;
         }
 
         let updateData = {};
@@ -211,7 +199,7 @@ export async function PATCH(req: NextRequest) {
                 );
             }
 
-            if (!isInProgress) {
+            if (!currentTask.status) {
                 return NextResponse.json(
                     { message: "Chỉ có thể submit khi task đang IN_PROGRESS" },
                     { status: 403 }
