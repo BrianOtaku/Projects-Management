@@ -64,22 +64,19 @@ export async function PUT(req: NextRequest) {
             return NextResponse.json({ message: 'Thiếu id người dùng' }, { status: 400 })
         }
 
-        // 🔎 Lấy user trước để check
         const existingUser = await prisma.user.findUnique({
             where: { id: BigInt(id) },
-            include: { leader: true }, // check quan hệ leader
+            include: { leader: true },
         })
 
         if (!existingUser) {
             return NextResponse.json({ message: 'Không tìm thấy user' }, { status: 404 })
         }
 
-        // ❌ Nếu user đang là leader của ít nhất 1 team → không cho đổi role
         if (existingUser.leader.length > 0 && role && role !== existingUser.role) {
             return NextResponse.json({ message: 'Không thể đổi role vì user đang là leader của một team' }, { status: 400 })
         }
 
-        // ✅ Update
         const updatedUser = await prisma.user.update({
             where: { id: BigInt(id) },
             data: {

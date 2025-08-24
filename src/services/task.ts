@@ -7,7 +7,7 @@ export async function getTasks() {
 }
 
 export async function getTask(id: string | number) {
-    const res = await api.get(`${API_ENDPOINTS.TASK_ID}?id=${id}`);
+    const res = await api.get(API_ENDPOINTS.TASK_ID.replace('[id]', id.toString()));
     return res.data;
 }
 

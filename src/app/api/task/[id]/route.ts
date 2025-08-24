@@ -3,16 +3,18 @@ import { prisma } from '@/lib/prisma'
 import { normalizeData } from '@/lib/utils'
 import { getCurrentUser } from '@/lib/utils';
 
-export async function GET(req: NextRequest) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     try {
+        const { id: paramId } = await params;
+        const queryId = req.nextUrl.searchParams.get('id');
+        const id = paramId || queryId;
         const user = await getCurrentUser();
-        const id = req.nextUrl.searchParams.get("id");
 
         if (!id) {
             return NextResponse.json({ message: "Thiếu id task" }, { status: 400 });
         }
 
-        if (!user || user.role == 'STAFF') {
+        if (!user || user.role === 'STAFF') {
             return NextResponse.json({ message: 'Access denied' }, { status: 403 });
         }
 

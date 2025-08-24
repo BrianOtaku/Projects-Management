@@ -7,12 +7,7 @@ export async function getUsers() {
 }
 
 export async function getUser(id: string | number) {
-    const res = await api.get(`${API_ENDPOINTS.USER_ID}/${id}`);
-    return res.data;
-}
-
-export async function getMe() {
-    const res = await api.get(API_ENDPOINTS.AUTH_ME);
+    const res = await api.get(API_ENDPOINTS.USER_ID.replace('[id]', id.toString()));
     return res.data;
 }
 
@@ -22,22 +17,27 @@ export async function createUser(data: unknown) {
 }
 
 export async function updateUser(id: string | number, data: unknown) {
-    const res = await api.put(`${API_ENDPOINTS.USER}/${id}`, data);
-    return res.data;
-}
-
-export async function updateMe(id: string | number, data: unknown) {
-    const res = await api.put(`${API_ENDPOINTS.USER_ID}/${id}`, data);
+    const res = await api.put(`${API_ENDPOINTS.USER}?id=${id}`, data);
     return res.data;
 }
 
 export async function deleteUser(id: string | number) {
-    const res = await api.delete(`${API_ENDPOINTS.USER}/${id}`);
+    const res = await api.delete(`${API_ENDPOINTS.USER}?id=${id}`);
+    return res.data;
+}
+
+export async function getMe() {
+    const res = await api.get(API_ENDPOINTS.AUTH_ME);
+    return res.data;
+}
+
+export async function updateMe(id: string | number, data: unknown) {
+    const res = await api.put(`${API_ENDPOINTS.AUTH_ME}?id=${id}`, data);
     return res.data;
 }
 
 export async function deleteMe(id: string | number) {
-    const res = await api.delete(`${API_ENDPOINTS.USER_ID}/${id}`);
+    const res = await api.delete(`${API_ENDPOINTS.AUTH_ME}?id=${id}`);
     return res.data;
 }
 
