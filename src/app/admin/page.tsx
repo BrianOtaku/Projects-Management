@@ -2,7 +2,7 @@ import { EcommerceMetrics } from "@/components/ecommerce/EcommerceMetrics";
 import React from "react";
 import MonthlySalesChart from "@/components/ecommerce/MonthlySalesChart";
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
-import ProjectManagement from "@/components/tables/projectManagement";
+import LineChartOne from "@/components/charts/line/LineChartOne";
 
 export default function Dashboard() {
   return (
@@ -12,7 +12,7 @@ export default function Dashboard() {
         <div className="col-span-12 space-y-4 md:space-y-6">
           <EcommerceMetrics />
           <MonthlySalesChart />
-          <ProjectManagement />
+          <LineChartOne />
         </div>
       </div>
     </div>
