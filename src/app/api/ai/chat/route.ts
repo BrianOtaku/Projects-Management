@@ -12,7 +12,6 @@ export async function GET() {
         const conversation = await prisma.message.findMany({
             where: { userId: BigInt(user.id) }
         });
-
         return NextResponse.json(normalizeData(conversation), { status: 200 })
     } catch (error) {
         console.error('[GET /api/chat]', error)
@@ -41,7 +40,7 @@ export async function POST(req: Request) {
             data: {
                 userId: user.id,
                 content: message,
-                role: "MANAGER",
+                role: user.role,
             },
         });
 

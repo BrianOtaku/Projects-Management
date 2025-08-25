@@ -69,19 +69,19 @@ export default function EditMe() {
           <Label>User Name</Label>
           <Input
             type="text"
-            defaultValue={name}
+            value={name}
             onChange={(e) => setName(e.target.value)}
           />
           <Label>User Email</Label>
           <Input
             type="email"
-            defaultValue={email}
+            value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
           <Label>Avatar</Label>
           <Input
             type="text"
-            defaultValue={avatar}
+            value={avatar}
             onChange={(e) => setAvatar(e.target.value)}
           />
         </ComponentCard>

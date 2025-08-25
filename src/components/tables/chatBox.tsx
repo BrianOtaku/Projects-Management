@@ -3,14 +3,16 @@
 import React, { useEffect, useRef, useState } from "react";
 import Input from "../form/input/InputField";
 import { createMessage, getMessages } from "@/services/ai";
-import { Message } from "@/constants/interfaces";
+import { Message, User } from "@/constants/interfaces";
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm'
+import { getMe } from "@/services/user";
 
 export default function ChatBox() {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [loadingAI, setLoadingAI] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
@@ -19,6 +21,12 @@ export default function ChatBox() {
       try {
         const data = await getMessages();
         setMessages(data);
+        const user = await getMe();
+        setUser(user);
+
+        if (messagesEndRef.current) {
+          messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+        }
       } catch (err) {
         console.error("Error fetching messages:", err);
       }
@@ -26,20 +34,28 @@ export default function ChatBox() {
     fetchMessages();
   }, []);
 
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
-
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!message.trim() || loadingAI) return;
+    if (!message.trim() || loadingAI || !user) return;
 
+    const tempUserMessage: Message = {
+      id: Date.now(),
+      content: message,
+      role: user.role,
+      createdAt: new Date(),
+    };
+
+    setMessages((prev) => [...prev, tempUserMessage]);
+    setMessage("");
     setLoadingAI(true);
+
     try {
-      await createMessage({ message });
-      setMessage("")
+      const { aiMessage } = await createMessage({ message });
+
+      setMessages((prev) => [...prev, aiMessage]);
     } catch (err) {
-      console.error("Error sending/fetching messages:", err);
+      console.error("Error sending message:", err);
+      setMessages((prev) => prev.filter((m) => m.id !== tempUserMessage.id));
     } finally {
       setLoadingAI(false);
     }

@@ -109,7 +109,7 @@ export default function EditTeam() {
           <Label>Team Name</Label>
           <Input
             type="text"
-            defaultValue={teamName}
+            value={teamName}
             onChange={(e) => setTeamName(e.target.value)}
           />
         </ComponentCard>

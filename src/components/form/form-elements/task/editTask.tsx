@@ -113,7 +113,7 @@ export default function EditTask() {
           <Label>Title</Label>
           <Input
             type="text"
-            defaultValue={title}
+            value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
 
