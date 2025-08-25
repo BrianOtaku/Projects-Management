@@ -11,6 +11,7 @@ enum Role {
   MANAGER
   LEADER
   STAFF
+  AI
 }
 
 enum Status {
@@ -23,15 +24,16 @@ enum Status {
 }
 
 model User {
-  id       BigInt  @id @default(autoincrement())
+  id       BigInt    @id @default(autoincrement())
   name     String
-  email    String  @unique
+  email    String    @unique
   password String
   role     Role
   teamId   BigInt?
-  team     Team?   @relation(fields: [teamId], references: [id])
+  team     Team?     @relation(fields: [teamId], references: [id])
   tasks    Task[]
-  leader   Team[]  @relation("TeamLeader")
+  leader   Team[]    @relation("TeamLeader")
+  message  Message[]
 }
 
 model Team {
@@ -56,7 +58,7 @@ model Project {
   submit   Boolean @default(false)
   accept   Boolean @default(false)
 
-  teamId BigInt? 
+  teamId BigInt?
   team   Team?   @relation(fields: [teamId], references: [id])
   tasks  Task[]
 }
@@ -78,4 +80,13 @@ model Task {
 
   user    User    @relation(fields: [userId], references: [id])
   project Project @relation(fields: [projectId], references: [id])
+}
+
+model Message {
+  id        BigInt   @id @default(autoincrement())
+  userId    BigInt?
+  user      User?    @relation(fields: [userId], references: [id])
+  content   String
+  role      Role
+  createdAt DateTime @default(now())
 }

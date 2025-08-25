@@ -119,14 +119,19 @@ export default function LineChartOne() {
     },
   ];
   return (
-    <div className="max-w-full overflow-x-auto custom-scrollbar">
-      <div id="chartEight" className="min-w-[1000px]">
-        <ReactApexChart
-          options={options}
-          series={series}
-          type="area"
-          height={310}
-        />
+    <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] sm:p-6">
+      <div className="max-w-full overflow-x-auto custom-scrollbar">
+        <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
+          Monthly Sales
+        </h3>
+        <div className="-ml-5 min-w-[650px] xl:min-w-full pl-2">
+          <ReactApexChart
+            options={options}
+            series={series}
+            type="area"
+            height={310}
+          />
+        </div>
       </div>
     </div>
   );

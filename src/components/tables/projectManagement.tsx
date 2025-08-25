@@ -12,11 +12,21 @@ import Badge from "../ui/badge/Badge";
 import Link from "next/link";
 import { getProjects } from "@/services/project";
 import { Project } from "@/constants/interfaces";
-import { PencilIcon, PlusIcon } from "@/icons";
+import { GeminiColorIcon, PencilIcon, PlusIcon } from "@/icons";
+import { Modal } from "../ui/modal";
+import Input from "../form/input/InputField";
+import { createProjectWithAI } from "@/services/ai";
 
 export default function ProjectManagement() {
   const [projects, setProjects] = useState<Project[]>([]);
+  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
+  const [loadingAI, setLoadingAI] = useState(false);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -34,21 +44,63 @@ export default function ProjectManagement() {
     fetchData();
   }, []);
 
+  const handleSend = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!message.trim() || loadingAI) return;
+
+    setLoadingAI(true);
+    try {
+      await createProjectWithAI({ message });
+      setMessage("");
+      closeModal();
+    } catch (err) {
+      console.error("Error sending/fetching messages:", err);
+    } finally {
+      setLoadingAI(false);
+    }
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
 
   return (
     <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white px-4 pb-3 pt-4 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6">
-      <div className="flex flex-col gap-2 mb-4 flex-row items-center justify-between">
-        <Link
-          href="project/new-project"
-          className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200"
+      <div className="flex flex-col gap-2 mb-4 sm:flex-row sm:items-center justify-between">
+        <div className="flex gap-2">
+          <Link
+            href="project/new-project"
+            className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200"
+          >
+            <PlusIcon />
+            New project
+          </Link>
+          <button
+            onClick={openModal}
+            className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200"
+          >
+            <GeminiColorIcon />
+            New with AI
+          </button>
+        </div>
+        <Modal
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          className="max-w-md sm:max-w-xl p-4 space-y-4 sm:space-y-6 sm:p-6"
+          showCloseButton={true}
+          isFullscreen={false}
         >
-          <PlusIcon />
-          New project
-        </Link>
-        <div className="flex items-center gap-3">
+          <form onSubmit={handleSend}>
+            <Input
+              type="text"
+              placeholder="Tell me what you would like to build?"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              disabled={loadingAI}
+            />
+          </form>
+        </Modal>
+        <div className="flex items-center gap-2">
           <button className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200">
             Filter
           </button>
@@ -120,7 +172,7 @@ export default function ProjectManagement() {
                       </Badge>
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                      <Link href={`project/edit-project/${project.id}`} title="Edit Project" className="flex justify-center">
+                      <Link href={`project/edit-project/${project.id}`} title="Edit Project" className="flex justify-center items-center">
                         <PencilIcon className="fill-current hover:text-gray-800 dark:hover:text-white/90" />
                       </Link>
                     </TableCell>

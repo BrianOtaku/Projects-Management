@@ -16,7 +16,7 @@ import {
 import { User } from "@/constants/interfaces";
 import { getMe } from "@/services/user";
 
-type Role = "MANAGER" | "LEADER" | "STAFF";
+type Role = "MANAGER" | "LEADER" | "STAFF" | "AI";
 
 type NavItem = {
   name: string;
@@ -139,15 +139,15 @@ const navItems: NavItem[] = [
     path: "/admin/completed-tasks",
     roles: ["STAFF"],
   },
-];
-
-const othersItems: NavItem[] = [
   {
     icon: <GroupIcon />,
     name: "Your Team",
     path: "/admin/your-team",
     roles: ["LEADER", "STAFF"]
   },
+];
+
+const othersItems: NavItem[] = [
   {
     icon: <CalenderIcon />,
     name: "Calendar",

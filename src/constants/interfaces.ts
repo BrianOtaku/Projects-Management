@@ -2,6 +2,7 @@ export enum Role {
     MANAGER = "MANAGER",
     LEADER = "LEADER",
     STAFF = "STAFF",
+    AI = "AI",
 }
 
 export enum Status {
@@ -70,3 +71,11 @@ export interface Task {
     canceled: boolean;
 }
 
+export interface Message {
+    id: number;
+    userId?: number;
+    user?: User;
+    content: string;
+    role: Role;
+    createdAt: Date;
+}

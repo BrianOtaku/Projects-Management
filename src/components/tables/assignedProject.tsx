@@ -12,12 +12,29 @@ import Badge from "../ui/badge/Badge";
 import Link from "next/link";
 import { getProjects } from "@/services/project";
 import { Project } from "@/constants/interfaces";
-import { PaperPlaneIcon, TaskIcon } from "@/icons";
+import { GeminiColorIcon, PaperPlaneIcon, TaskIcon } from "@/icons";
 import { getMe } from "@/services/user";
+import Input from "../form/input/InputField";
+import { Modal } from "../ui/modal";
+import { createTaskWithAI } from "@/services/ai";
 
 export default function AssignedProjects() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
+  const [message, setMessage] = useState("");
+  const [loadingAI, setLoadingAI] = useState(false);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedProjectId, setSelectedProjectId] = useState<Project["id"] | null>(null);
+
+  const openModal = (id: Project["id"]) => {
+    setSelectedProjectId(id);
+    setIsModalOpen(true);
+  };
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedProjectId(null);
+  };
 
   useEffect(() => {
     async function fetchData() {
@@ -41,6 +58,24 @@ export default function AssignedProjects() {
     }
     fetchData();
   }, []);
+
+  const handleSend = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!message.trim() || loadingAI || selectedProjectId == null) return;
+
+    setLoadingAI(true);
+    try {
+      await createTaskWithAI(selectedProjectId, {
+        message
+      });
+      setMessage("");
+      closeModal();
+    } catch (err) {
+      console.error("Error sending/fetching messages:", err);
+    } finally {
+      setLoadingAI(false);
+    }
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -76,7 +111,7 @@ export default function AssignedProjects() {
                 <TableCell isHeader className="px-4 py-3 font-medium text-gray-500 text-start text-base dark:text-gray-400">
                   Status
                 </TableCell>
-                <TableCell isHeader className="px-4 py-3 font-medium text-gray-500 text-center text-base dark:text-gray-400">
+                <TableCell isHeader className="w-[100px] px-4 py-3 font-medium text-gray-500 text-center text-base dark:text-gray-400">
                   {""}
                 </TableCell>
               </TableRow>
@@ -120,11 +155,35 @@ export default function AssignedProjects() {
                         {project.status}
                       </Badge>
                     </TableCell>
-                    <TableCell className="flex gap-3 justify-center px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                      <Link href={`task/new-task/${project.id}`} title="New Task">
+                    <TableCell className="flex gap-4 justify-center px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                      <button
+                        title="New Task With AI"
+                        onClick={() => openModal(project.id)}
+                        className="w-[24px] flex justify-center items-center"
+                      >
+                        <GeminiColorIcon className="w-4.5 h-4.5 flex justify-center items-center" />
+                      </button>
+                      <Modal
+                        isOpen={isModalOpen}
+                        onClose={closeModal}
+                        className="max-w-md sm:max-w-xl p-4 space-y-4 sm:space-y-6 sm:p-6"
+                        showCloseButton={true}
+                        isFullscreen={false}
+                      >
+                        <form onSubmit={handleSend}>
+                          <Input
+                            type="text"
+                            placeholder="Tell me what you would like to build?"
+                            value={message}
+                            onChange={(e) => setMessage(e.target.value)}
+                            disabled={loadingAI}
+                          />
+                        </form>
+                      </Modal>
+                      <Link href={`task/new-task/${project.id}`} title="New Task" className="flex justify-center items-center">
                         <TaskIcon className="fill-current hover:text-gray-800 dark:hover:text-white/90" />
                       </Link>
-                      <Link href={`project/submit/${project.id}`} title="Submit">
+                      <Link href={`project/submit/${project.id}`} title="Submit" className="w-[24px] h-[24px] flex justify-center items-center">
                         <PaperPlaneIcon className="fill-current hover:text-gray-800 dark:hover:text-white/90" />
                       </Link>
                     </TableCell>
@@ -135,6 +194,6 @@ export default function AssignedProjects() {
           </Table>
         </div>
       </div>
-    </div>
+    </div >
   );
 }

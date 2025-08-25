@@ -13,4 +13,8 @@ export enum API_ENDPOINTS {
     TASK_ID = '/api/task/[id]',
     USER_ID = '/api/user/[id]',
     TEAM_ID = '/api/team/[id]',
+
+    AI_CHAT = '/api/ai/chat',
+    AI_PROJECT = '/api/ai/project',
+    AI_TASK = '/api/ai/task',
 }

@@ -55,6 +55,7 @@ import LoginIcon from "./login.svg";
 import LogoutIcon from "./logout.svg";
 import FolderIcon_2 from "./folder-2.svg";
 import GoogleIcon from "./google.svg";
+import GeminiColorIcon from "./gemini-color.svg"
 
 export {
   LoginIcon,
@@ -113,5 +114,6 @@ export {
   ChevronUpIcon,
   ChatIcon,
   FolderIcon_2,
-  GoogleIcon
+  GoogleIcon,
+  GeminiColorIcon,
 };

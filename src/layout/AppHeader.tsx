@@ -3,12 +3,15 @@ import { ThemeToggleButton } from "@/components/common/ThemeToggleButton";
 import NotificationDropdown from "@/components/header/NotificationDropdown";
 import UserDropdown from "@/components/tables/userConfig";
 import { useSidebar } from "@/context/SidebarContext";
+import { GeminiColorIcon } from "@/icons";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useState, useEffect, useRef } from "react";
 
 const AppHeader: React.FC = () => {
   const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false);
+  const router = useRouter();
 
   const { isMobileOpen, toggleSidebar, toggleMobileSidebar } = useSidebar();
 
@@ -19,6 +22,10 @@ const AppHeader: React.FC = () => {
       toggleMobileSidebar();
     }
   };
+
+  const handleChat = () => {
+    router.push("/admin/chat-box");
+  }
 
   const toggleApplicationMenu = () => {
     setApplicationMenuOpen(!isApplicationMenuOpen);
@@ -118,6 +125,12 @@ const AppHeader: React.FC = () => {
                 fill="currentColor"
               />
             </svg>
+          </button>
+
+          <button
+            onClick={handleChat}
+            className="relative dropdown-toggle flex items-center justify-center text-gray-500 transition-colors bg-white border border-gray-200 rounded-full hover:text-gray-700 h-11 w-11 hover:bg-gray-100 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white">
+            <GeminiColorIcon className="w-5 h-5" />
           </button>
 
         </div>

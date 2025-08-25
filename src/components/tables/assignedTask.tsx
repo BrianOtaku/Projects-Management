@@ -117,7 +117,7 @@ export default function AssignedTasks() {
                       </Badge>
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                      <Link href={`task/submit/${task.id}`} title="Submit" className="flex justify-center">
+                      <Link href={`task/submit/${task.id}`} title="Submit" className="flex justify-center items-center">
                         <PaperPlaneIcon className="fill-current hover:text-gray-800 dark:hover:text-white/90" />
                       </Link>
                     </TableCell>
