@@ -1,9 +1,8 @@
 "use client";
 import React from "react";
-
 import { ApexOptions } from "apexcharts";
-
 import dynamic from "next/dynamic";
+
 // Dynamically import the ReactApexChart component
 const ReactApexChart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
@@ -12,62 +11,64 @@ const ReactApexChart = dynamic(() => import("react-apexcharts"), {
 export default function LineChartOne() {
   const options: ApexOptions = {
     legend: {
-      show: false, // Hide legend
+      show: true, // Hiển thị legend để phân biệt các trạng thái
       position: "top",
       horizontalAlign: "left",
     },
-    colors: ["#465FFF", "#9CB9FF"], // Define line colors
+    colors: ["#00ccffff", "#ffff00", "#00ff08b9", "#ff0000ff", "#ff6f00ff"], // Bốn màu cho bốn trạng thái
     chart: {
       fontFamily: "Outfit, sans-serif",
       height: 310,
-      type: "line", // Set the chart type to 'line'
+      type: "line", // Giữ nguyên type là line
       toolbar: {
-        show: false, // Hide chart toolbar
+        show: false, // Ẩn toolbar
       },
     },
     stroke: {
-      curve: "straight", // Define the line style (straight, smooth, or step)
-      width: [2, 2], // Line width for each dataset
+      curve: "straight", // Đường thẳng
+      width: [2, 2, 2, 2], // Độ dày đường cho bốn trạng thái
     },
-
     fill: {
       type: "gradient",
       gradient: {
-        opacityFrom: 0.55,
-        opacityTo: 0,
+        shade: "light", // Hoặc "dark", ảnh hưởng đến tông màu gradient
+        type: "vertical", // Hướng gradient (vertical, horizontal, diagonal)
+        opacityFrom: 0.6, // Độ mờ phía trên
+        opacityTo: 0.1, // Độ mờ phía dưới
+        gradientToColors: ["#D1D5DB", "#D1D5DB", "#D1D5DB", "#D1D5DB", "#D1D5DB"], // Màu gradient cho từng line
       },
     },
     markers: {
-      size: 0, // Size of the marker points
-      strokeColors: "#fff", // Marker border color
+      size: 0,
+      strokeColors: "#fff",
       strokeWidth: 2,
       hover: {
-        size: 6, // Marker size on hover
+        size: 6,
       },
     },
     grid: {
       xaxis: {
         lines: {
-          show: false, // Hide grid lines on x-axis
+          show: false,
         },
       },
       yaxis: {
         lines: {
-          show: true, // Show grid lines on y-axis
+          show: true,
         },
       },
     },
     dataLabels: {
-      enabled: false, // Disable data labels
+      enabled: false, // Tắt nhãn dữ liệu
     },
     tooltip: {
-      enabled: true, // Enable tooltip
+      enabled: true,
       x: {
-        format: "dd MMM yyyy", // Format for x-axis tooltip
+        format: "dd MMM yyyy",
       },
     },
     xaxis: {
-      type: "category", // Category-based x-axis
+      type: "category",
       categories: [
         "Jan",
         "Feb",
@@ -83,26 +84,26 @@ export default function LineChartOne() {
         "Dec",
       ],
       axisBorder: {
-        show: false, // Hide x-axis border
+        show: false,
       },
       axisTicks: {
-        show: false, // Hide x-axis ticks
+        show: false,
       },
       tooltip: {
-        enabled: false, // Disable tooltip for x-axis points
+        enabled: false,
       },
     },
     yaxis: {
       labels: {
         style: {
-          fontSize: "12px", // Adjust font size for y-axis labels
-          colors: ["#6B7280"], // Color of the labels
+          fontSize: "12px",
+          colors: ["#6B7280"],
         },
       },
       title: {
-        text: "", // Remove y-axis title
+        text: "Số lượng dự án", // Thêm tiêu đề trục y để rõ ràng hơn
         style: {
-          fontSize: "0px",
+          fontSize: "12px",
         },
       },
     },
@@ -110,25 +111,38 @@ export default function LineChartOne() {
 
   const series = [
     {
-      name: "Sales",
-      data: [180, 190, 170, 160, 175, 165, 170, 205, 230, 210, 240, 235],
+      name: "Not Started",
+      data: [10, 12, 8, 15, 20, 18, 22, 25, 20, 18, 15, 10], // Dữ liệu mẫu
     },
     {
-      name: "Revenue",
-      data: [40, 30, 50, 40, 55, 40, 70, 100, 110, 120, 150, 140],
+      name: "In Progress",
+      data: [5, 22, 25, 20, 18, 15, 8, 10, 12, 15, 20, 18],
+    },
+    {
+      name: "Completed",
+      data: [2, 4, 6, 8, 10, 12, 15, 18, 20, 22, 25, 20],
+    },
+    {
+      name: "Canceled",
+      data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+    },
+    {
+      name: "Overdue",
+      data: [2, 3, 1, 6, 5, 10, 4, 7, 3, 8, 1, 5],
     },
   ];
+
   return (
     <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] sm:p-6">
       <div className="max-w-full overflow-x-auto custom-scrollbar">
         <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-          Monthly Sales
+          Projects Status Overview
         </h3>
         <div className="-ml-5 min-w-[650px] xl:min-w-full pl-2">
           <ReactApexChart
             options={options}
             series={series}
-            type="area"
+            type="area" // Giữ type là area để có hiệu ứng gradient
             height={310}
           />
         </div>

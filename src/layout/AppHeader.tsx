@@ -1,7 +1,7 @@
 "use client";
 import { ThemeToggleButton } from "@/components/common/ThemeToggleButton";
 import NotificationDropdown from "@/components/header/NotificationDropdown";
-import UserDropdown from "@/components/tables/userConfig";
+import UserDropdown from "@/components/user-profile/userConfig";
 import { useSidebar } from "@/context/SidebarContext";
 import { GeminiColorIcon } from "@/icons";
 import Image from "next/image";
