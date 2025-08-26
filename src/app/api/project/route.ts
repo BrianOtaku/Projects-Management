@@ -167,6 +167,9 @@ export async function PATCH(req: NextRequest) {
         if (!currentProject) {
             return NextResponse.json({ message: "Project không tồn tại" }, { status: 404 });
         }
+        if (currentProject.status === "OVERDUE" || currentProject.status === "COMPLETED" || currentProject.status === "CANCELED") {
+            return NextResponse.json({ message: "Project đã hoàn thành hoặc bị hủy" }, { status: 400 });
+        }
 
         if (!id) {
             return NextResponse.json({ message: 'Thiếu id' }, { status: 400 });
