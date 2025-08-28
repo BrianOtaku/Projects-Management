@@ -31,7 +31,7 @@ export default function SignUpForm() {
 
     try {
       await signUp(name, email, password);
-      router.push("/admin");
+      router.push("/signin");
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);

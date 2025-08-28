@@ -5,6 +5,7 @@ import Label from "@/components/form/ui/Label";
 import Button from "@/components/ui/button/Button";
 import { EyeCloseIcon, EyeIcon } from "@/icons";
 import { signIn } from "@/services/auth";
+import { getMe } from "@/services/user";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
@@ -26,7 +27,21 @@ export default function SignInForm() {
 
     try {
       await signIn(email, password);
-      router.push("/admin");
+      const user = await getMe();
+
+      if (!user) {
+        throw new Error("Không lấy được thông tin user");
+      }
+
+      if (user.role === "LEADER") {
+        router.push("/admin/assigned-projects");
+      } else if (user.role === "STAFF") {
+        router.push("/admin/assigned-tasks");
+      } else if (user.role === "MANAGER") {
+        router.push("/admin");
+      } else {
+        router.push("/");
+      }
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
